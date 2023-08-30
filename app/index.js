@@ -4,7 +4,6 @@ import { Stack } from "expo-router";
 import { Provider } from "react-redux";
 import WelcomeScreen from "./Screens/WelcomeScreen";
 import LoginScreen from "./Screens/LoginScreen";
-import DrawerNavigator from './Screens/DrawerNavigator';
 import DetailsScreen from './Screens/DetailsScreen';
 import HomeScreen from "./Screens/HomeScreen";
 import Home from "./Admin/Home";
@@ -17,6 +16,7 @@ import AdminProfile from "./Admin/AdminProfile";
 import UserProfile from "./Screens/UserProfile";
 import Reserve from "./Screens/Reserve";
 import UserReservations from "./Screens/UserReservations";
+import UserReserv from './Screens/UserReserv';
 
 export default function Page() {
 
@@ -32,6 +32,7 @@ export default function Page() {
         <Stack.Screen name="UserProfile" component={UserProfile} />
         <Stack.Screen  name="Reserve" component={Reserve} />
         <Stack.Screen options={{ headerShown: false}} name="UserReservations" component={UserReservations} />
+        <Stack.Screen options={{ headerShown: false }} name="UserReserv" component={UserReserv} />
 
         {/*Admin panel */}
         {/* <Stack.Screen  options={{ headerShown: false}} name="Home" component={Home} /> 

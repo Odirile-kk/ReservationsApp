@@ -9,22 +9,24 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import {  doc, getDocs, db, collection } from "../firebase";
-import { collectionGroup, deleteDoc } from "firebase/firestore";
+import { collectionGroup, deleteDoc , query, where } from "firebase/firestore";
 
-const Reservations = ({ route }) => {
+const UserReserv = ({ route }) => {
   const navigation = useNavigation();
   const [reservationsData, setReservationsData] = useState([]);
-  const { restuarant } = route.params;
+  const { restuarant, userUID } = route.params;
 
   useEffect(() => {
     const getData = async () => {
+
+
       const restuarantId = restuarant.id;
       const restuarantRef = doc(db, "restuarant", restuarantId);
       // const reservationCollectionRef = collectionGroup( db, "reservations");
       const reservationCollection = collection(restuarantRef, 'reservations')
 
       try {
-        const querySnapshot = await getDocs(reservationCollection);
+        const querySnapshot = await getDocs(query(reservationCollection, where('userId', '==', userUID)));
         console.log("query:", querySnapshot);
         const reservations = [];
         
@@ -73,7 +75,7 @@ const Reservations = ({ route }) => {
     elevation: 5,
       }}
     >
-      <Image source={require("../assets/login.png")} style={styles.image} />
+      <Image source={{ uri: item.images }} style={styles.image} />
       <View style={styles.detailItem}>
         <Text style={styles.text}>{item.name}</Text>
         <Text style={styles.text}>{item.email}</Text>
@@ -87,11 +89,8 @@ const Reservations = ({ route }) => {
     alignItems: "flex-end",
         }}
       >
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Edit</Text>
-        </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={() => handleDelete(item.id)}>
-          <Text style={styles.buttonText}>Delete</Text>
+          <Text style={styles.buttonText}>Cancel</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -105,15 +104,7 @@ const Reservations = ({ route }) => {
     marginBottom: 10,}}>Reservations</Text>
       <Text style={{fontSize: 18,
     marginBottom: 10,}}>{restuarant.name}</Text>
-      <TouchableOpacity style={styles.addButton}>
-        <Text
-          style={styles.buttonText}
-          onPress={() => navigation.navigate("AddReservation", { restuarant })}
-       
-        >
-          Add
-        </Text>
-      </TouchableOpacity>
+   
       <View>
         <FlatList
           data={reservationsData}
@@ -171,4 +162,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Reservations;
+export default UserReserv;

@@ -22,8 +22,8 @@ const Reserve = ({ route}) => {
   const [guests, setGuests] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('')
-  const {restuarant} = route.params;
-  const {userEmail} = route.params;
+  const [userId, setUserId] = useState('')
+  const {userEmail, userUID, restuarant } = route.params;
 
   const navigation = useNavigation()
 
@@ -59,11 +59,12 @@ const Reserve = ({ route}) => {
         time: time.toLocaleTimeString(),
         guests: guests,
         name: name,
-        email: userEmail
+        email: userEmail,
+        userId: userUID
+
       };
     
       try {
-        
         const restuarantId = restuarant.id; 
         const restuarantRef = doc(collection(db, 'restuarant'), restuarantId);
         const reservationCollectionRef = collection(restuarantRef, 'reservations');
@@ -98,6 +99,14 @@ const Reserve = ({ route}) => {
         onChangeText={setEmail}
         placeholder="Email"
         placeholderTextColor={COLORS.grey}
+        editable={false}
+      />
+      <TextInput 
+        style={styles.input}
+        defaultValue={userUID}
+        onChangeText={setUserId}
+        placeholderTextColor={COLORS.grey}
+        editable={false}
       />
       <TouchableOpacity onPress={showDatepicker} style={styles.input}>
         <Text>{date.toDateString()}</Text>

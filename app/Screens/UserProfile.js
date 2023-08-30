@@ -8,7 +8,7 @@ import { useNavigation } from "expo-router";
 const UserProfile = ({ route }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const {userEmail} = route.params;
+  const {userEmail, userUID} = route.params;
   const navigate = useNavigation();
 
   const handleUsernameChange = (text) => {
@@ -71,7 +71,7 @@ const UserProfile = ({ route }) => {
               borderColor: COLORS.primary,
               borderWidth: 1,
             }}
-            onPress={() => navigate.navigate("UserReservations")}
+            onPress={() => navigate.navigate("UserReservations", {userUID})}
           >
             <Text>Reservations</Text>
           </TouchableOpacity>

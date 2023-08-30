@@ -23,7 +23,7 @@ const HomeScreen = ({ navigation, route }) => {
   const [restuarants, setRestuarants] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredRestaurants, setFilteredRestaurants] = useState([]);
-  const {userEmail} = route.params;
+  const {userEmail, userUID } = route.params;
 
   useEffect(() => {
     const getData = async () => {
@@ -61,7 +61,7 @@ const HomeScreen = ({ navigation, route }) => {
     return (
       <TouchableOpacity
         activeOpacity={0.8}
-        onPress={() => navigation.navigate("DetailsScreen", { restuarant: item, userEmail } )}
+        onPress={() => navigation.navigate("DetailsScreen", { restuarant: item, userEmail, userUID } )}
       >
         <View style={style.cardContainer}>
           {/* Render the card image */}
@@ -110,7 +110,7 @@ const HomeScreen = ({ navigation, route }) => {
 
   return (
     <View style={style.mainContainer}>
-      <TouchableOpacity style={{ display: "flex", flexDirection: "row", padding: "3%" }} onPress={() => navigation.navigate('UserProfile', {userEmail})}>
+      <TouchableOpacity style={{ display: "flex", flexDirection: "row", padding: "3%" }} onPress={() => navigation.navigate('UserProfile', {userEmail, userUID})}>
         <Icon name="account" size={30} color={COLORS.primary}/>
       </TouchableOpacity>
 

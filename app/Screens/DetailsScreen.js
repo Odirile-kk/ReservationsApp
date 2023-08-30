@@ -20,7 +20,7 @@ const {width} = Dimensions.get('screen');
 
 const DetailsScreen = ({navigation, route}) => {
   const {restuarant} = route.params;
-  const {userEmail} = route.params;
+  const {userEmail, userUID } = route.params;
 
  
 
@@ -76,7 +76,7 @@ const DetailsScreen = ({navigation, route}) => {
           {/* footer container */}
           {/* <View style={style.footer}> */}
             
-            <TouchableOpacity style={style.bookNowBtn} onPress={() => navigation.navigate('Reserve', {userEmail, restuarant} )}>
+            <TouchableOpacity style={style.bookNowBtn} onPress={() => navigation.navigate('Reserve', {userEmail, restuarant, userUID } )}>
               <Text style={{color: COLORS.white}}>Reserve Now</Text>
             </TouchableOpacity>
           </View>

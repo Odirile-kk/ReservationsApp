@@ -1,98 +1,133 @@
-import { StyleSheet, Text, View, FlatList } from "react-native";
-import React from "react";
-import Icon from "react-native-vector-icons/MaterialIcons";
-import COLORS from "../const/colors";
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { collection, doc, getDocs, db, deleteDoc } from "../firebase";
 
-const UserReservations = ({ navigation, route }) => {
-// const {userEmail} = route.params;
-// const {restuarant} = route.params;
+const UserReservations = ({route}) => {
+  const [restuarants, setRestuarants] = useState([]);
+  const navigation = useNavigation();
+  const {userUID} = route.params
 
-    const cardItem = ({ item }) => {
-        return (
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={() => navigation.navigate("DetailsScreen", {restuarant: item})}
-          >
-            <View style={styles.cardContainer}>
-              {/* Render the card image */}
-              {/* <View style={styles.cardImageContainer}>
-                <Image
-                  source={require('../assets/logo-bigbite.png')}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    borderRadius: 15,
-                    resizeMode: "cover",
-                  }}
-                />
-              </View> */}
-      
-              {/* Render all the card details here */}
-              <View style={styles.cardDetailsContainer}>
-                {/* Name and gender icon */}
-                <View
-                  style={{ flexDirection: "row", justifyContent: "space-between" }}
-                >
-                  <Text
-                    style={{ fontWeight: "bold", color: COLORS.dark, fontSize: 20 }}
-                  >
-                   Name
-                  </Text>
-                  <Icon name="arrow-expand" size={22} color={COLORS.grey} />
-                  {/* <MdOpenInFull size={22} color={COLORS.grey} /> */}
-                </View>
-                <Text style={{ fontSize: 10, marginTop: 5, color: COLORS.grey }}>
-                Desc
-                </Text>
-      
-                {/* Render distance and the icon */}
-                <View style={{ marginTop: 5, flexDirection: "row" }}>
-                  <Icon name="map-marker" color={COLORS.primary} size={18} />
-                  <Text style={{ fontSize: 12, color: COLORS.grey, marginLeft: 5 }}>
-                  Address
-                  </Text>
-                </View>
-              </View>
-            </View>
-          </TouchableOpacity>
-        );
-      };
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "restuarants"));
+        const data = [];
+
+        querySnapshot.forEach((doc) => {
+          data.push({
+            ...doc.data(),
+            id: doc.id,
+          });
+        });
+        setRestuarants(data);
+        // console.log('outside');
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      }
+    };
+    getData();
+  }, []);
+
+  const renderItem = ({ item }) => (
+    <TouchableOpacity
+      style={styles.itemContainer}
+      onPress={() => navigation.navigate("UserReserv", { restuarant: item , userUID})}
+    >
+      <Image source={{ uri: item.images }} style={styles.image} />
+      <View style={{ width: "50%" }}>
+        <Text style={styles.text}>{item.name}</Text>
+        <Text style={styles.text}>{item.description}</Text>
+        <Text style={styles.text}>{item.address}</Text>
+      </View>
+
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          height: "50%",
+          marginTop: "4%",
+          marginLeft: "2%",
+        }}
+      >
+       
+      </View>
+    </TouchableOpacity>
+  );
 
   return (
-    <View>
-      <View style={styles.header}>
+    <View style={styles.container}>
+    
+<View style={styles.header}>
         <View style={styles.headerBtn}>
           <Icon name="arrow-back-ios" size={20} onPress={navigation.goBack} />
         </View>
       </View>
+    
 
-      <View style={{ marginTop: 20 }}>
-        <FlatList
-          showsVerticalScrollIndicator={false}
-        //   data={filteredRestaurants}
-          renderItem={cardItem}
+      <FlatList
+        data={restuarants}
+        renderItem={renderItem}
         keyExtractor={(item) => item.id}
-        />
-      </View>
+        style={{
+          marginTop: "5%",
+          width: "100%",
+        }}
+      />
     </View>
   );
 };
 
-export default UserReservations;
-
 const styles = StyleSheet.create({
-  header: {
-    paddingVertical: 20,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 10,
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
   },
-  headerBtn: {
-    height: 50,
-    width: 50,
-    backgroundColor: COLORS.white,
+  itemContainer: {
+    flexDirection: "row",
+    backgroundColor: "white",
+    padding: 15,
+    marginVertical: 10,
     borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  image: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    marginRight: 10,
+  },
+  text: {
+    flex: 1,
+    fontSize: 16,
+  },
+  button: {
+    backgroundColor: "#3498db",
+    paddingVertical: 3,
+    paddingHorizontal: 5,
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  buttonText: {
+    color: "#fff",
+    fontWeight: "bold",
   },
 });
+
+export default UserReservations;
+
