@@ -12,6 +12,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { collection, doc, setDoc, addDoc } from "firebase/firestore"; 
 import { db } from '../firebase';
 import { useNavigation } from 'expo-router';
+import COLORS from "../const/colors";
 
 const Reserve = ({ route}) => {
   const [date, setDate] = useState(new Date());
@@ -21,7 +22,9 @@ const Reserve = ({ route}) => {
   const [guests, setGuests] = useState('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('')
-  // const {restuarant} = route.params;
+  const {restuarant} = route.params;
+  const {userEmail} = route.params;
+
   const navigation = useNavigation()
 
   const handleDateChange = (event, selectedDate) => {
@@ -46,54 +49,55 @@ const Reserve = ({ route}) => {
   };
 
   const handleReservation = async () => {
-      // if (!guests || guests === '') {
-      //   alert('Please select the number of guests.');
-      //   return;
-      // }
+      if (!guests || guests === '') {
+        alert('Please select the number of guests.');
+        return;
+      }
     
-      // const reservationData = {
-      //   date: date.toDateString(),
-      //   time: time.toLocaleTimeString(),
-      //   guests: guests,
-      //   name: name,
-      //   email: email
-      // };
+      const reservationData = {
+        date: date.toDateString(),
+        time: time.toLocaleTimeString(),
+        guests: guests,
+        name: name,
+        email: userEmail
+      };
     
-      // try {
-      //   // Replace 'restaurantId' with the ID of the specific restaurant
-      //   const restuarantId = restuarant.id; // Replace with the actual restaurant ID
-      //   const restuarantRef = doc(collection(db, 'restuarant'), restuarantId);
+      try {
         
-      //   // Create a subcollection 'reservations' under the restaurant document
-      //   const reservationCollectionRef = collection(restuarantRef, 'reservations');
+        const restuarantId = restuarant.id; 
+        const restuarantRef = doc(collection(db, 'restuarant'), restuarantId);
+        const reservationCollectionRef = collection(restuarantRef, 'reservations');
         
-      //   // Add a reservation document to the subcollection
-      //   await addDoc(reservationCollectionRef, reservationData);
+        // Add a reservation document to the subcollection
+        await addDoc(reservationCollectionRef, reservationData);
         
-      //   alert('Reservation has been added successfully!');
-      // } catch (error) {
-      //   console.error('Error adding reservation: ', error);
-      // }
+        alert('Reservation has been added successfully!');
+      } catch (error) {
+        console.error('Error adding reservation: ', error);
+      }
 
       // navigation.navigate('Reservations')
+      console.log(restuarant.id)
   };
 
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Table Reservation</Text>
+      {/* <Text style={styles.heading}>Table Reservation</Text> */}
 
       <TextInput 
         style={styles.input}
         value={name}
+        placeholderTextColor={COLORS.grey}
         onChangeText={setName}
         placeholder="Name"
       />
       <TextInput 
         style={styles.input}
-        value={email}
+        defaultValue={userEmail}
         onChangeText={setEmail}
         placeholder="Email"
+        placeholderTextColor={COLORS.grey}
       />
       <TouchableOpacity onPress={showDatepicker} style={styles.input}>
         <Text>{date.toDateString()}</Text>
@@ -155,9 +159,9 @@ const Reserve = ({ route}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    // padding: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
   },
   heading: {
     fontSize: 24,
@@ -175,10 +179,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   button: {
-    backgroundColor: '#ff6f61',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 8,
+    backgroundColor:COLORS.primary ,
+    padding: 10,
+    borderRadius :10,
+    borderColor: COLORS.primary,
+    borderWidth: 1
   },
   buttonText: {
     color: 'white',

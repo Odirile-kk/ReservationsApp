@@ -12,6 +12,7 @@ import {
   Touchable,
   TouchableOpacity,
 } from 'react-native';
+import Icons from "react-native-vector-icons/MaterialCommunityIcons";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import COLORS from '../const/colors';
 const {width} = Dimensions.get('screen');
@@ -19,10 +20,9 @@ const {width} = Dimensions.get('screen');
 
 const DetailsScreen = ({navigation, route}) => {
   const {restuarant} = route.params;
+  const {userEmail} = route.params;
 
-  const InteriorCard = ({interior}) => {
-    return <Image source={require('../assets/login.png')} style={style.interiorImage} />;
-  };
+ 
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: COLORS.light}}>
@@ -30,7 +30,7 @@ const DetailsScreen = ({navigation, route}) => {
         {/* restuarant image */}
 
         <View style={style.backgroundImageContainer}>
-          <ImageBackground style={style.backgroundImage} source={require('../assets/logo-bigbite.png')}>
+          <ImageBackground style={style.backgroundImage} source={restuarant.images}>
             <View style={style.header}>
               <View style={style.headerBtn}>
                 <Icon
@@ -41,11 +41,6 @@ const DetailsScreen = ({navigation, route}) => {
               </View>
             </View>
           </ImageBackground>
-
-          {/* Virtual Tag View */}
-          {/* <View style={style.virtualTag}>
-            <Text style={{color: COLORS.white}}>Virtual tour</Text>
-          </View> */}
         </View>
 
         <View style={style.detailsContainer}>
@@ -59,6 +54,7 @@ const DetailsScreen = ({navigation, route}) => {
 
           {/* Location text */}
           <Text style={{fontSize: 16, color: COLORS.grey}}>
+          <Icons name="map-marker" color={COLORS.primary} size={18} />
           {restuarant.address}
           </Text>
 
@@ -80,7 +76,7 @@ const DetailsScreen = ({navigation, route}) => {
           {/* footer container */}
           {/* <View style={style.footer}> */}
             
-            <TouchableOpacity style={style.bookNowBtn} onPress={() => navigation.navigate('Reserve')}>
+            <TouchableOpacity style={style.bookNowBtn} onPress={() => navigation.navigate('Reserve', {userEmail, restuarant} )}>
               <Text style={{color: COLORS.white}}>Reserve Now</Text>
             </TouchableOpacity>
           </View>
@@ -156,7 +152,7 @@ const style = StyleSheet.create({
     height: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: COLORS.dark,
+    backgroundColor: COLORS.primary,
     borderRadius: 10,
     paddingHorizontal: 20,
   },

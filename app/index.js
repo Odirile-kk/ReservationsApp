@@ -16,6 +16,7 @@ import UpdateRestuarant from "./Admin/UpdateRestuarant";
 import AdminProfile from "./Admin/AdminProfile";
 import UserProfile from "./Screens/UserProfile";
 import Reserve from "./Screens/Reserve";
+import UserReservations from "./Screens/UserReservations";
 
 export default function Page() {
 
@@ -23,13 +24,14 @@ export default function Page() {
 
   return (
     <Stack.Navigator >
-    {/* <Stack.Screen options={{ headerShown: false}} name="welcome" component={WelcomeScreen}/>
-    <Stack.Screen options={{ headerShown: false}} name="login" component={LoginScreen}/> */}
+    <Stack.Screen options={{ headerShown: false}} name="welcome" component={WelcomeScreen}/>
+    <Stack.Screen options={{ headerShown: false}} name="login" component={LoginScreen}/>
 
     <Stack.Screen options={{ headerShown: false}} name="HomeScreen" component={HomeScreen} />
         <Stack.Screen  options={{ headerShown: false}} name="DetailsScreen" component={DetailsScreen} />
-        <Stack.Screen  options={{ headerShown: false}} name="UserProfile" component={UserProfile} />
-        <Stack.Screen  options={{ headerShown: false}} name="Reserve" component={Reserve} />
+        <Stack.Screen name="UserProfile" component={UserProfile} />
+        <Stack.Screen  name="Reserve" component={Reserve} />
+        <Stack.Screen options={{ headerShown: false}} name="UserReservations" component={UserReservations} />
 
         {/*Admin panel */}
         {/* <Stack.Screen  options={{ headerShown: false}} name="Home" component={Home} /> 

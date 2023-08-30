@@ -27,10 +27,6 @@ const App = () => {
           });
         });
         setRestuarants(data);
-        // console.log("Restuarant querysnapshot:", querySnapshot);
-        data.forEach((data) => {
-          // console.log("Restuarant:", data);
-        });
         // console.log('outside');
       } catch (error) {
         console.error("Error fetching data: ", error);
@@ -56,7 +52,7 @@ const App = () => {
       style={styles.itemContainer}
       onPress={() => navigation.navigate("Reservations", { restuarant: item })}
     >
-      <Image source={require("../assets/login.png")} style={styles.image} />
+      <Image source={{ uri: item.images }} style={styles.image} />
       <View style={{ width: "50%" }}>
         <Text style={styles.text}>{item.name}</Text>
         <Text style={styles.text}>{item.description}</Text>

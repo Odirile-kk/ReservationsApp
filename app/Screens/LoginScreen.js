@@ -35,7 +35,7 @@ const LoginScreen = () => {
     signInWithEmailAndPassword(authorisation, email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
-        nav.replace("HomeScreen");
+        nav.replace("HomeScreen", { userEmail: user.email });
         console.log(user.email);
       })
       .catch((error) => alert(error.message));

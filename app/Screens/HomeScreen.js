@@ -19,9 +19,11 @@ import { collection, doc, getDocs, db, deleteDoc } from "../firebase";
 
 const { height } = Dimensions.get("window");
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ navigation, route }) => {
   const [restuarants, setRestuarants] = useState([]);
-
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredRestaurants, setFilteredRestaurants] = useState([]);
+  const {userEmail} = route.params;
 
   useEffect(() => {
     const getData = async () => {
@@ -36,29 +38,36 @@ const HomeScreen = ({ navigation }) => {
           });
         });
         setRestuarants(data);
-        // console.log("Restuarant querysnapshot:", querySnapshot);
-        data.forEach((data) => {
-          // console.log("Restuarant:", data);
-        });
-        // console.log('outside');
+        setFilteredRestaurants(data);
+      
       } catch (error) {
         console.error("Error fetching data: ", error);
       }
     };
     getData();
+    console.log(userEmail)
   }, []);
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    const filtered = restuarants.filter((restaurant) =>
+      restaurant.name.toLowerCase().includes(query.toLowerCase())
+    );
+    setFilteredRestaurants(filtered);
+  };
+  
 
   const cardItem = ({ item }) => {
     return (
       <TouchableOpacity
         activeOpacity={0.8}
-        onPress={() => navigation.navigate("DetailsScreen", {restuarant: item})}
+        onPress={() => navigation.navigate("DetailsScreen", { restuarant: item, userEmail } )}
       >
         <View style={style.cardContainer}>
           {/* Render the card image */}
           <View style={style.cardImageContainer}>
             <Image
-              source={require('../assets/logo-bigbite.png')}
+              source={{ uri: item.images }}
               style={{
                 width: "100%",
                 height: "100%",
@@ -101,7 +110,7 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <View style={style.mainContainer}>
-      <TouchableOpacity style={{ display: "flex", flexDirection: "row", padding: "3%" }} onPress={() => navigation.navigate('UserProfile')}>
+      <TouchableOpacity style={{ display: "flex", flexDirection: "row", padding: "3%" }} onPress={() => navigation.navigate('UserProfile', {userEmail})}>
         <Icon name="account" size={30} color={COLORS.primary}/>
       </TouchableOpacity>
 
@@ -112,6 +121,7 @@ const HomeScreen = ({ navigation }) => {
           placeholderTextColor={COLORS.grey}
           placeholder="Search..."
           style={{ flex: 1 }}
+          onChangeText={handleSearch} 
         />
         <Icon name="sort-ascending" size={24} color={COLORS.grey} />
       </View>
@@ -119,7 +129,7 @@ const HomeScreen = ({ navigation }) => {
       <View style={{ marginTop: 20 }}>
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={restuarants}
+          data={filteredRestaurants}
           renderItem={cardItem}
         keyExtractor={(item) => item.id}
         />
