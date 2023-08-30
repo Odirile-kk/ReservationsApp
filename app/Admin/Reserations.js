@@ -14,6 +14,7 @@ import { collectionGroup, deleteDoc } from "firebase/firestore";
 const Reservations = ({ route }) => {
   const navigation = useNavigation();
   const [reservationsData, setReservationsData] = useState([]);
+  const [isArrived, setIsArrived] = useState(false)
   const { restuarant } = route.params;
 
   useEffect(() => {
@@ -73,7 +74,7 @@ const Reservations = ({ route }) => {
     elevation: 5,
       }}
     >
-      <Image source={require("../assets/login.png")} style={styles.image} />
+      <Image source={{ uri: restuarant.images }} style={styles.image} />
       <View style={styles.detailItem}>
         <Text style={styles.text}>{item.name}</Text>
         <Text style={styles.text}>{item.email}</Text>
@@ -92,6 +93,11 @@ const Reservations = ({ route }) => {
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={() => handleDelete(item.id)}>
           <Text style={styles.buttonText}>Delete</Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
+        style={[styles.button, isArrived ? styles.arrivedButton : null]} onPress={() => setIsArrived(!isArrived)}
+        >
+        <Text style={styles.buttonText} >  {isArrived ? "Confirmed" : "Pending"}</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -168,7 +174,10 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     marginBottom: 10,
-  }
+  },
+  arrivedButton: {
+    backgroundColor: "gray",
+  },
 });
 
 export default Reservations;
