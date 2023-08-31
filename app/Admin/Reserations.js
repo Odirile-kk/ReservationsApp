@@ -45,19 +45,23 @@ const Reservations = ({ route }) => {
     getData();
   }, []);
 
-  const handleDelete = async (reservationsId) => {
+  const handleDelete = async (reservationId) => {
     try {
-      await deleteDoc(collectionGroup(db, "reservations", reservationsId));
-      setReservationsData((prevreservation) =>
-        prevreservation.filter(
-          (reservationsData) => reservationsData.id !== reservationsId
-        )
+      const restaurantId = restuarant.id;
+      const reservationRef = doc(db, 'restaurants', restaurantId, 'reservations', reservationId);
+  
+      await deleteDoc(reservationRef);
+      
+      setReservationsData((prevReservations) =>
+        prevReservations.filter((reservation) => reservation.id !== reservationId)
       );
-      console.log("item deleted");
+      
+      console.log("Reservation deleted");
     } catch (error) {
-      console.error("Error deleting restaurant: ", error);
+      console.error("Error deleting reservation: ", error);
     }
   };
+  
 
   const renderItem = ({ item }) => (
     <View
@@ -85,12 +89,15 @@ const Reservations = ({ route }) => {
         <Text>Guests: {item.guests}</Text>
       </View>
       <View
+   
         style={{
           justifyContent: "center",
           alignItems: "flex-end",
         }}
       >
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button}
+           onPress={() => navigation.navigate('UpdateReservation', {restuarant, reservationId : item.id})}
+        >
           <Text style={styles.buttonText}>Edit</Text>
         </TouchableOpacity>
         <TouchableOpacity

@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -10,13 +9,18 @@ import {
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker'; 
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { doc, getDocs, db, collection, updateDoc } from "../firebase";
 
-const UpdateReservation = () => {
+const UpdateReservation = ({route}) => {
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [time, setTime] = useState(new Date());
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('')
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [guests, setGuests] = useState('');
+  const [reservationsData, setReservationsData] = useState([]);
+  const {restuarant, reservationId} = route.params
 
   const handleDateChange = (event, selectedDate) => {
     setShowDatePicker(false);
@@ -42,15 +46,94 @@ const UpdateReservation = () => {
     setShowTimePicker(true);
   };
 
+  useEffect(() => {
+    const getData = async () => {
+      const restuarantId = restuarant.id;
+      const restuarantRef = doc(db, "restuarant", restuarantId);
+      // const reservationCollectionRef = collectionGroup( db, "reservations");
+      const reservationCollection = collection(restuarantRef, "reservations");
+
+      try {
+        const querySnapshot = await getDocs(reservationCollection);
+        const reservations = [];
+  
+        querySnapshot.forEach((doc) => {
+          const reservationData = {
+            id: doc.id,
+            ...doc.data(),
+          };
+  
+          reservations.push(reservationData);
+        });
+  
+        setReservationsData(reservations);
+  
+        // Find the reservation that matches the specified reservationId
+        const matchingReservation = reservations.find(
+          (reservation) => reservation.id === reservationId
+        );
+  
+        if (matchingReservation) {
+          console.log("Matching Reservation:", matchingReservation);
+          setReservationsData(matchingReservation);
+          // You can use 'matchingReservation' here outside of the function
+        }
+      } catch (error) {
+        console.error("Error fetching reservations:", error);
+      }
+    };
+    getData();
+  }, []);
+
+
+  const handleSubmit = async () => {
+    if (!guests || guests === '') {
+      alert('Please select the number of guests.');
+      return;
+    }
+  
+    const reservationData = {
+      date: date.toDateString(),
+      time: time.toLocaleTimeString(),
+      guests: guests,
+      name: name,
+      email: email
+    };
+  
+    try {
+     
+      const restuarantId = restuarant.id;
+      const reservationId = reservationsData.id
+    const reservationRef = doc(db, 'restuarant', restuarantId, 'reservations', reservationId);
+    await updateDoc(reservationRef, reservationData);
+      alert('Reservation has been added successfully!');
+    } catch (error) {
+      console.error('Error adding reservation: ', error);
+    }
+
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Table Reservation</Text>
+      <TextInput 
+        style={styles.input}
+        value={reservationsData.name}
+        onChangeText={setName}
+        placeholder="Name"
+      />
+      <TextInput 
+        style={styles.input}
+        value={reservationsData.email}
+        onChangeText={setEmail}
+        placeholder="Email"
+      />
       <TouchableOpacity onPress={showDatepicker} style={styles.input}>
         <Text>{date.toDateString()}</Text>
       </TouchableOpacity>
       {showDatePicker && (
         <DateTimePicker
-          value={date}
+          value={reservationsData.date}
           mode="date"
           display="default"
           onChange={handleDateChange}
@@ -61,7 +144,7 @@ const UpdateReservation = () => {
       </TouchableOpacity>
       {showTimePicker && (
         <DateTimePicker
-          value={time}
+          value={reservationsData.time}
           mode="time"
           display="default"
           onChange={handleTimeChange}
@@ -95,7 +178,9 @@ const UpdateReservation = () => {
       </Picker>
       )}
 
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button}
+      onPress={handleSubmit}
+      >
         <Text style={styles.buttonText}>Reserve Table</Text>
       </TouchableOpacity>
     </View>

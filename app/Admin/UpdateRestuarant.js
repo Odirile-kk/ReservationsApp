@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,7 +9,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
-import { collection, doc, setDoc, updateDoc } from "firebase/firestore"; 
+import { collection, doc, setDoc, updateDoc, getDocs} from "firebase/firestore"; 
 import { db } from '../firebase';
 
 
@@ -18,7 +18,38 @@ const UpdateRestuarant = ({ route }) => {
   const [description, setDescription] = useState('');
   const [address, setAddress] = useState('');
   const [images, setImages] = useState([]);
+  const [restuarants, setRestuarants] = useState([]);
   const {restuarant} = route.params;
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "restuarants"));
+        const data = [];
+        querySnapshot.forEach((doc) => {
+          data.push({
+            ...doc.data(),
+            id: doc.id,
+          });
+        });
+        setRestuarants(data);
+        // console.log('outside');
+         // Find the specific restaurant's data by its ID
+         const specificRestaurant = data.find(r => r.id === restuarant.id);
+
+         // Prepopulate the form fields with the specific restaurant's data
+         if (specificRestaurant) {
+           setName(specificRestaurant.name);
+           setDescription(specificRestaurant.description);
+           setAddress(specificRestaurant.address);
+         }
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      }
+    };
+    getData();
+  }, []);
+
 
   const handleImageUpload = () => {
     ImagePicker.launchImageLibrary(

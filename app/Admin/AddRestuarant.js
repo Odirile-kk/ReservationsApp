@@ -24,10 +24,6 @@ const AddRestuarant = () => {
   const [description, setDescription] = useState("");
   const [address, setAddress] = useState("");
   const [images, setImages] = useState([]);
-  const [image1, setImage1] = useState([]);
-  const [image2, setImage2] = useState([]);
-  const [image3, setImage3] = useState([]);
-  const [image4, setImage4] = useState([]);
   const navigate = useNavigation();
   const storage = getStorage();
 
@@ -45,16 +41,13 @@ const AddRestuarant = () => {
 
       const imageUri = result.uri;
 
-      // Create a reference to Firebase Storage
       const storageRef = ref(storage, `images/${Date.now()}`);
 
-      // Upload the image to Firebase Storage
       await uploadString(storageRef, imageUri, "data_url");
 
-      // Get the download URL
       const downloadURL = await getDownloadURL(storageRef);
 
-      setImages(downloadURL); // Update state with the download URL
+      setImages(downloadURL); 
     }
     console.log(images);
   };

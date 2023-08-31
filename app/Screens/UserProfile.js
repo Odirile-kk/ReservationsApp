@@ -1,49 +1,33 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
-import { useRoute } from "@react-navigation/native";
+import { View, Text, TextInput, Button, StyleSheet, Image } from "react-native";
 import COLORS from "../const/colors";
+import Icon from "react-native-vector-icons/FontAwesome";
+import * as ImagePicker from "expo-image-picker";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useNavigation } from "expo-router";
+import { collection, doc, setDoc } from "firebase/firestore";
+import { db } from "../firebase";
+import {
+  ref,
+  uploadString,
+  getDownloadURL,
+  getStorage,
+  storage
+} from "firebase/storage";
 
 const UserProfile = ({ route }) => {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState('')
   const {userEmail, userUID, isAdmin} = route.params;
   const navigate = useNavigation();
 
-  const handleUsernameChange = (text) => {
-    setUsername(text);
-  };
-
-  const handleEmailChange = (text) => {
-    setEmail(text);
-  };
-
-  const handleSubmit = () => {
-    console.log("Username:", username);
-    console.log('Email:', userEmail);
-    console.log('Email:', isAdmin);
-  };
 
   return (
-    <View style={styles.container}>
-      <View>
-        <Text style={styles.label}>Username:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter your username"
-          value={username}
-          onChangeText={handleUsernameChange}
-        />
 
-        <Text style={styles.label}>Email:</Text>
-        <TextInput
-          style={styles.input}
-          defaultValue={userEmail}
-          onChangeText={handleEmailChange}
-          keyboardType="email-address"
-        />
-        <View
+
+    <View style={styles.container}>
+    <Text style={styles.username}>{username}</Text>
+    <Text style={styles.email}>{userEmail}</Text>
+    <View
           style={{
             alignItems: "center",
             justifyContent: "space-around",
@@ -51,18 +35,7 @@ const UserProfile = ({ route }) => {
             marginTop: "2%",
           }}
         >
-          <TouchableOpacity
-            onPress={handleSubmit}
-            style={{
-              backgroundColor: COLORS.secondary,
-              padding: 10,
-              borderRadius: 10,
-              borderColor: COLORS.primary,
-              borderWidth: 1,
-            }}
-          >
-            <Text>Update</Text>
-          </TouchableOpacity>
+       
           <TouchableOpacity
             style={{
               backgroundColor: COLORS.secondary,
@@ -95,16 +68,16 @@ const UserProfile = ({ route }) => {
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+ 
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    alignItems: "center",
     justifyContent: "center",
-    // backgroundColor: COLORS.primary,
+    padding: 20,
   },
   label: {
     fontSize: 16,
@@ -116,6 +89,16 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     marginBottom: 15,
+  },
+  username: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  email: {
+    fontSize: 18,
+    color: "#888",
+    marginBottom: 10,
   },
 });
 
