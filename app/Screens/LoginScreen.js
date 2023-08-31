@@ -14,29 +14,64 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import { collection, doc, setDoc , getDocs} from "firebase/firestore";
+import { db } from "../firebase";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const nav = useNavigation();
+  const [secretCode, setSecretCode] = useState(""); 
+  const adminSecretCode = "12349"; 
 
   const handleSignUp = () => {
+
+    const isAdmin = secretCode === adminSecretCode
     createUserWithEmailAndPassword(authorisation, email, password)
-      .then((userCredentials) => {
+      .then(async(userCredentials) => {
         const user = userCredentials.user;
+       
+           // Assuming you have a Firestore collection named 'users'
+           const usersCollection = doc(collection(db, "users"));
+
+           // Create a document for the user using their UID as the document ID
+           await setDoc(usersCollection, {
+             email: user.email,
+             uid: user.uid,
+             isAdmin: isAdmin,
+             // Add other user-related data here if needed
+           });
+
         // nav.replace('Home')
         alert("Registration succesful!");
-        console.log(user.email);
+        console.log(user.isAdmin);
       })
       .catch((error) => alert(error.message));
+    
+   
   };
 
+  //still working on the isAdmin.. get one user from firestore
   const handleSignIn = () => {
     signInWithEmailAndPassword(authorisation, email, password)
-      .then((userCredentials) => {
+      .then(async (userCredentials) => {
         const user = userCredentials.user;
-        nav.replace("HomeScreen", { userEmail: user.email, userUID: user.uid,});
-        console.log(user.uid);
+
+        const querySnapshot = await getDocs(collection(db, "users"));
+
+    let isAdmin = false;
+
+    querySnapshot.forEach((doc) => {
+      console.log("Document ID:", doc.data().uid, user.uid);
+
+      if (doc.data().uid === user.uid) {
+        isAdmin = doc.data().isAdmin;
+      }
+    });
+
+    console.log('isAdmin:', isAdmin);
+       
+       nav.replace("HomeScreen", { userEmail: user.email, userUID: user.uid, isAdmin: isAdmin});
       })
       .catch((error) => alert(error.message));
   };
@@ -65,6 +100,13 @@ const LoginScreen = () => {
           value={password}
           onChangeText={(text) => setPassword(text)}
           secureTextEntry
+        />
+        <TextInput
+          placeholder="Secret Code (Admin)"
+          placeholderTextColor="gray"
+          style={styles.textInput}
+          value={secretCode}
+          onChangeText={(text) => setSecretCode(text)}
         />
 
         <TouchableOpacity style={styles.loginBtn} onPress={handleSignIn}>

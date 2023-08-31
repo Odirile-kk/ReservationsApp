@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { collection, doc, getDocs, db, deleteDoc } from "../firebase";
+import { MaterialIcons } from '@expo/vector-icons';
 
 const App = () => {
   const [restuarants, setRestuarants] = useState([]);
@@ -48,7 +49,8 @@ const App = () => {
   };
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity
+    <View>
+ <TouchableOpacity
       style={styles.itemContainer}
       onPress={() => navigation.navigate("Reservations", { restuarant: item })}
     >
@@ -58,7 +60,7 @@ const App = () => {
         <Text style={styles.text}>{item.description}</Text>
         <Text style={styles.text}>{item.address}</Text>
       </View>
-
+   
       <View
         style={{
           display: "flex",
@@ -86,6 +88,8 @@ const App = () => {
         </TouchableOpacity>
       </View>
     </TouchableOpacity>
+    </View>
+   
   );
 
   return (
@@ -102,14 +106,15 @@ const App = () => {
         <TouchableOpacity
           onPress={() => navigation.navigate("AddRestuarant")}
           style={{
-            padding: 10,
-            backgroundColor: "#ff6f61",
-            borderRadius: 10,
+            padding: 5,
+         borderWidth: 1,
+            borderRadius: 50,
+            alignSelf: 'center'
           }}
         >
-          <Text style={{ color: "white", fontWeight: "bold" }}>Add</Text>
+          <MaterialIcons name="add-business" size={24} color="black" />
         </TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => navigation.navigate("AdminProfile")}
           style={{
             padding: 10,
@@ -118,7 +123,7 @@ const App = () => {
           }}
         >
           <Text style={{ color: "white", fontWeight: "bold" }}>profile</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       <FlatList

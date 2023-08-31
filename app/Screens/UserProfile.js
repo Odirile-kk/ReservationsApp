@@ -8,7 +8,7 @@ import { useNavigation } from "expo-router";
 const UserProfile = ({ route }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const {userEmail, userUID} = route.params;
+  const {userEmail, userUID, isAdmin} = route.params;
   const navigate = useNavigation();
 
   const handleUsernameChange = (text) => {
@@ -22,7 +22,7 @@ const UserProfile = ({ route }) => {
   const handleSubmit = () => {
     console.log("Username:", username);
     console.log('Email:', userEmail);
-   
+    console.log('Email:', isAdmin);
   };
 
   return (
@@ -74,6 +74,24 @@ const UserProfile = ({ route }) => {
             onPress={() => navigate.navigate("UserReservations", {userUID})}
           >
             <Text>Reservations</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+          if (isAdmin) {
+            navigate.navigate("Home"); // Navigate to Admin Dashboard only if isAdmin is true
+          }
+        }}
+        style={{
+          backgroundColor: COLORS.secondary,
+          padding: 10,
+          borderRadius: 10,
+          borderColor: COLORS.primary,
+          borderWidth: 1,
+          display: isAdmin ? "flex" : "none", // Show the button only if isAdmin is true
+        }}
+          >
+            <Text>Admin Dashboard</Text>
           </TouchableOpacity>
         </View>
       </View>

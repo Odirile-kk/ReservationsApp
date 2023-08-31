@@ -23,7 +23,7 @@ const HomeScreen = ({ navigation, route }) => {
   const [restuarants, setRestuarants] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredRestaurants, setFilteredRestaurants] = useState([]);
-  const {userEmail, userUID } = route.params;
+  const {userEmail, userUID, isAdmin } = route.params;
 
   useEffect(() => {
     const getData = async () => {
@@ -45,7 +45,7 @@ const HomeScreen = ({ navigation, route }) => {
       }
     };
     getData();
-    console.log(userEmail)
+    console.log(isAdmin)
   }, []);
 
   const handleSearch = (query) => {
@@ -110,7 +110,7 @@ const HomeScreen = ({ navigation, route }) => {
 
   return (
     <View style={style.mainContainer}>
-      <TouchableOpacity style={{ display: "flex", flexDirection: "row", padding: "3%" }} onPress={() => navigation.navigate('UserProfile', {userEmail, userUID})}>
+      <TouchableOpacity style={{ display: "flex", flexDirection: "row", padding: "3%" }} onPress={() => navigation.navigate('UserProfile', {userEmail, userUID, isAdmin})}>
         <Icon name="account" size={30} color={COLORS.primary}/>
       </TouchableOpacity>
 

@@ -24,7 +24,7 @@ export default function Page() {
 
   return (
     <Stack.Navigator >
-    {/* <Stack.Screen options={{ headerShown: false}} name="welcome" component={WelcomeScreen}/>
+    <Stack.Screen options={{ headerShown: false}} name="welcome" component={WelcomeScreen}/>
     <Stack.Screen options={{ headerShown: false}} name="login" component={LoginScreen}/>
 
     <Stack.Screen options={{ headerShown: false}} name="HomeScreen" component={HomeScreen} />
@@ -32,16 +32,16 @@ export default function Page() {
         <Stack.Screen name="UserProfile" component={UserProfile} />
         <Stack.Screen  name="Reserve" component={Reserve} />
         <Stack.Screen options={{ headerShown: false}} name="UserReservations" component={UserReservations} />
-        <Stack.Screen options={{ headerShown: false }} name="UserReserv" component={UserReserv} /> */}
+        <Stack.Screen options={{ headerShown: false }} name="UserReserv" component={UserReserv} />
 
         {/*Admin panel */}
-        <Stack.Screen  options={{ headerShown: false}} name="Home" component={Home} /> 
+        {/* <Stack.Screen name="Home" component={Home} /> 
         <Stack.Screen  options={{ headerShown: false}} name="Reservations" component={Reservations} />
         <Stack.Screen  options={{ headerShown: false}} name="AddRestuarant" component={AddRestuarant} />  
         <Stack.Screen  options={{ headerShown: false}} name="AddReservation" component={AddReservation} />  
         <Stack.Screen  options={{ headerShown: false}} name="UpdateReservation" component={UpdateReservation} />
         <Stack.Screen  options={{ headerShown: false}} name="UpdateRestuarant" component={UpdateRestuarant} />
-        <Stack.Screen  options={{ headerShown: false}} name="AdminProfile" component={AdminProfile} /> 
+        <Stack.Screen  name="AdminProfile" component={AdminProfile} />  */}
     </Stack.Navigator>
   );
 }

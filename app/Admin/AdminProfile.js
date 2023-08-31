@@ -1,13 +1,22 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import * as ImagePicker from "expo-image-picker";
-
-import { View, Text, StyleSheet, Button, Image } from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { useNavigation } from "expo-router";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Button,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 
 const AdminProfile = () => {
+
   const [image, setImage] = useState(null);
+  const navigate = useNavigation();
 
   const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -24,22 +33,19 @@ const AdminProfile = () => {
 
   return (
     <View style={styles.container}>
-      <View style={{alignItems: "center", justifyContent: "center" }}>
-        <Button title="Pick an image from camera roll" onPress={pickImage} />
+      <View style={{ alignItems: "center", justifyContent: "center" }}>
+        <TouchableOpacity onPress={pickImage}>
+          <Icon name="upload" size={30} color="black" />
+        </TouchableOpacity>
         {image && (
           <Image
             source={{ uri: image }}
-            style={{ width: 200, height: 200, borderRadius: "50%" }}
+            style={{ width: 200, height: 200, borderRadius: 100 }}
           />
         )}
       </View>
       <Text style={styles.username}>John Doe</Text>
       <Text style={styles.email}>john.doe@example.com</Text>
-      <Text style={styles.bio}>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed fermentum
-        quam non orci convallis, non tincidunt massa viverra.
-      </Text>
-      <Text style={styles.bookings}>Total Bookings: 2</Text>
       <Button title="Update Profile" />
     </View>
   );
