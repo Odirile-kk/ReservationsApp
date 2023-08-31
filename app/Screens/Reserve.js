@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
+  Image
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker'; 
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -58,10 +59,8 @@ const Reserve = ({ route}) => {
         date: date.toDateString(),
         time: time.toLocaleTimeString(),
         guests: guests,
-        name: name,
         email: userEmail,
         userId: userUID
-
       };
     
       try {
@@ -84,29 +83,17 @@ const Reserve = ({ route}) => {
 
   return (
     <View style={styles.container}>
-      {/* <Text style={styles.heading}>Table Reservation</Text> */}
+      <Text style={styles.heading}>Table Reservation</Text>
 
-      <TextInput 
-        style={styles.input}
-        value={name}
-        placeholderTextColor={COLORS.grey}
-        onChangeText={setName}
-        placeholder="Name"
-      />
-      <TextInput 
-        style={styles.input}
-        defaultValue={userEmail}
-        onChangeText={setEmail}
-        placeholder="Email"
-        placeholderTextColor={COLORS.grey}
-        editable={false}
-      />
-      <TextInput 
-        style={styles.input}
-        defaultValue={userUID}
-        onChangeText={setUserId}
-        placeholderTextColor={COLORS.grey}
-        editable={false}
+
+      <Image 
+        source={require('../assets/eating.png')}
+      style={{
+        width: '90%',
+        height: '40%',
+
+      }}
+
       />
       <TouchableOpacity onPress={showDatepicker} style={styles.input}>
         <Text>{date.toDateString()}</Text>
@@ -170,7 +157,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 20,
+    padding: 10,
   },
   heading: {
     fontSize: 24,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   ImageBackground,
   SafeAreaView,
@@ -15,14 +15,50 @@ import {
 import Icons from "react-native-vector-icons/MaterialCommunityIcons";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import COLORS from '../const/colors';
+import { collection, getDocs, db } from "../firebase";
 const {width} = Dimensions.get('screen');
 
 
 const DetailsScreen = ({navigation, route}) => {
   const {restuarant} = route.params;
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [address, setAddress] = useState('');
+  const [images, setImages] = useState([]);
   const {userEmail, userUID } = route.params;
+  const [restuarants, setRestuarants] = useState([]);
 
- 
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "restuarants"));
+        const data = [];
+
+        querySnapshot.forEach((doc) => {
+          data.push({
+            ...doc.data(),
+            id: doc.id,
+          });
+        });
+        setRestuarants(data);
+        // Find the specific restaurant's data by its ID
+        const specificRestaurant = data.find(r => r.id === restuarant.id);
+
+        // Prepopulate the form fields with the specific restaurant's data
+        if (specificRestaurant) {
+          setName(specificRestaurant.name);
+          setDescription(specificRestaurant.description);
+          setAddress(specificRestaurant.address);
+          setImages(specificRestaurant.images)
+        }
+        console.log(specificRestaurant)
+      
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      }
+    };
+    getData();
+  }, []);
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: COLORS.light}}>
@@ -30,7 +66,7 @@ const DetailsScreen = ({navigation, route}) => {
         {/* restuarant image */}
 
         <View style={style.backgroundImageContainer}>
-          <ImageBackground style={style.backgroundImage} source={restuarant.images}>
+          <ImageBackground style={style.backgroundImage}  source={{ uri: images }}>
             <View style={style.header}>
               <View style={style.headerBtn}>
                 <Icon
@@ -47,7 +83,7 @@ const DetailsScreen = ({navigation, route}) => {
           {/* Name and rating view container */}
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <Text style={{fontSize: 20, fontWeight: 'bold'}}>
-            {restuarant.name}
+            {name}
             </Text>
             
           </View>
@@ -55,27 +91,16 @@ const DetailsScreen = ({navigation, route}) => {
           {/* Location text */}
           <Text style={{fontSize: 16, color: COLORS.grey}}>
           <Icons name="map-marker" color={COLORS.primary} size={18} />
-          {restuarant.address}
+          {address}
           </Text>
 
           
           <Text style={{marginTop: 20, color: COLORS.grey}}>
-            {restuarant.description}
+            {description}
           </Text>
 
-          {/* Interior list */}
-          <FlatList
-            contentContainerStyle={{marginTop: 20}}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            keyExtractor={(_, key) => key.toString()}
-            data={restuarant}
-            renderItem={({item}) => <InteriorCard interior={item} />}
-          />
-
           {/* footer container */}
-          {/* <View style={style.footer}> */}
-            
+      
             <TouchableOpacity style={style.bookNowBtn} onPress={() => navigation.navigate('Reserve', {userEmail, restuarant, userUID } )}>
               <Text style={{color: COLORS.white}}>Reserve Now</Text>
             </TouchableOpacity>
@@ -155,6 +180,7 @@ const style = StyleSheet.create({
     backgroundColor: COLORS.primary,
     borderRadius: 10,
     paddingHorizontal: 20,
+    marginTop: 10
   },
   detailsContainer: {flex: 1, paddingHorizontal: 20, marginTop: 40},
   facility: {flexDirection: 'row', marginRight: 15},

@@ -18,11 +18,8 @@ const UserReserv = ({ route }) => {
 
   useEffect(() => {
     const getData = async () => {
-
-
       const restuarantId = restuarant.id;
       const restuarantRef = doc(db, "restuarant", restuarantId);
-      // const reservationCollectionRef = collectionGroup( db, "reservations");
       const reservationCollection = collection(restuarantRef, 'reservations')
 
       try {
