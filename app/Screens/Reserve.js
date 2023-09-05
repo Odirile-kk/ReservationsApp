@@ -84,8 +84,6 @@ const Reserve = ({ route}) => {
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Table Reservation</Text>
-
-
       <Image 
         source={require('../assets/eating.png')}
       style={{
@@ -93,7 +91,6 @@ const Reserve = ({ route}) => {
         height: '40%',
 
       }}
-
       />
       <TouchableOpacity onPress={showDatepicker} style={styles.input}>
         <Text>{date.toDateString()}</Text>

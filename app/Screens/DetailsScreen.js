@@ -25,6 +25,10 @@ const DetailsScreen = ({navigation, route}) => {
   const [description, setDescription] = useState('');
   const [address, setAddress] = useState('');
   const [images, setImages] = useState([]);
+  const [image1, setImage1] = useState([]);
+  const [image2, setImage2] = useState([]);
+  const [image3, setImage3] = useState([]);
+  const [gallery, setGallery] = useState([]);
   const {userEmail, userUID } = route.params;
   const [restuarants, setRestuarants] = useState([]);
 
@@ -50,6 +54,9 @@ const DetailsScreen = ({navigation, route}) => {
           setDescription(specificRestaurant.description);
           setAddress(specificRestaurant.address);
           setImages(specificRestaurant.images)
+          setImage1(specificRestaurant.image1);
+          setImage2(specificRestaurant.imgae2)
+          setImage3(specificRestaurant.image3)
         }
         console.log(specificRestaurant)
       
@@ -59,7 +66,7 @@ const DetailsScreen = ({navigation, route}) => {
     };
     getData();
   }, []);
-
+console.log(restuarant.image1)
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: COLORS.light}}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -99,13 +106,23 @@ const DetailsScreen = ({navigation, route}) => {
             {description}
           </Text>
 
-          {/* footer container */}
+      {/* Additional images */}
+<FlatList 
+data={[image1, image2, image3]}
+numColumns={3}
+keyExtractor={(item) => item.id}
+renderItem={({item}) => (
+  <View>
+    <Image source={{data}} style={{width: 60, height: 60}}/>
+  </View>
+)}
+/>
       
             <TouchableOpacity style={style.bookNowBtn} onPress={() => navigation.navigate('Reserve', {userEmail, restuarant, userUID } )}>
               <Text style={{color: COLORS.white}}>Reserve Now</Text>
             </TouchableOpacity>
           </View>
-        {/* </View> */}
+   
       </ScrollView>
     </SafeAreaView>
   );
