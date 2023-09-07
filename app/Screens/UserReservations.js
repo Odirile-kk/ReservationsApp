@@ -8,13 +8,13 @@ import {
   StyleSheet,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from "react-native-vector-icons/MaterialIcons";
 import { collection, doc, getDocs, db, deleteDoc } from "../firebase";
 
-const UserReservations = ({route}) => {
+const UserReservations = ({ route }) => {
   const [restuarants, setRestuarants] = useState([]);
   const navigation = useNavigation();
-  const {userUID} = route.params
+  const { userUID } = route.params;
 
   useEffect(() => {
     const getData = async () => {
@@ -40,7 +40,9 @@ const UserReservations = ({route}) => {
   const renderItem = ({ item }) => (
     <TouchableOpacity
       style={styles.itemContainer}
-      onPress={() => navigation.navigate("UserReserv", { restuarant: item , userUID})}
+      onPress={() =>
+        navigation.navigate("UserReserv", { restuarant: item, userUID })
+      }
     >
       <Image source={{ uri: item.images }} style={styles.image} />
       <View style={{ width: "50%" }}>
@@ -57,21 +59,17 @@ const UserReservations = ({route}) => {
           marginTop: "4%",
           marginLeft: "2%",
         }}
-      >
-       
-      </View>
+      ></View>
     </TouchableOpacity>
   );
 
   return (
     <View style={styles.container}>
-    
-<View style={styles.header}>
+      <View style={styles.header}>
         <View style={styles.headerBtn}>
           <Icon name="arrow-back-ios" size={20} onPress={navigation.goBack} />
         </View>
       </View>
-    
 
       <FlatList
         data={restuarants}
@@ -130,4 +128,3 @@ const styles = StyleSheet.create({
 });
 
 export default UserReservations;
-

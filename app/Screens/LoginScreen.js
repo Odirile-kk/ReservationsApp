@@ -14,44 +14,14 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { collection, doc, setDoc , getDocs} from "firebase/firestore";
+import { collection, doc, setDoc, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const nav = useNavigation();
-  const [secretCode, setSecretCode] = useState(""); 
-  const adminSecretCode = "12349"; 
 
-  const handleSignUp = () => {
-
-    const isAdmin = secretCode === adminSecretCode
-    createUserWithEmailAndPassword(authorisation, email, password)
-      .then(async(userCredentials) => {
-        const user = userCredentials.user;
-       
-           // Assuming you have a Firestore collection named 'users'
-           const usersCollection = doc(collection(db, "users"));
-
-           // Create a document for the user using their UID as the document ID
-           await setDoc(usersCollection, {
-             email: user.email,
-             uid: user.uid,
-             isAdmin: isAdmin,
-             // Add other user-related data here if needed
-           });
-
-        // nav.replace('Home')
-        alert("Registration succesful!");
-        console.log(user.isAdmin);
-      })
-      .catch((error) => alert(error.message));
-    
-   
-  };
-
-  //still working on the isAdmin.. get one user from firestore
   const handleSignIn = () => {
     signInWithEmailAndPassword(authorisation, email, password)
       .then(async (userCredentials) => {
@@ -59,19 +29,23 @@ const LoginScreen = () => {
 
         const querySnapshot = await getDocs(collection(db, "users"));
 
-    let isAdmin = false;
+        let isAdmin = false;
 
-    querySnapshot.forEach((doc) => {
-      console.log("Document ID:", doc.data().uid, user.uid);
+        querySnapshot.forEach((doc) => {
+          console.log("Document ID:", doc.data().uid, user.uid);
 
-      if (doc.data().uid === user.uid) {
-        isAdmin = doc.data().isAdmin;
-      }
-    });
+          if (doc.data().uid === user.uid) {
+            isAdmin = doc.data().isAdmin;
+          }
+        });
 
-    console.log('isAdmin:', isAdmin);
-       
-       nav.replace("HomeScreen", { userEmail: user.email, userUID: user.uid, isAdmin: isAdmin});
+        console.log("isAdmin:", isAdmin);
+
+        nav.replace("HomeScreen", {
+          userEmail: user.email,
+          userUID: user.uid,
+          isAdmin: isAdmin
+        });
       })
       .catch((error) => alert(error.message));
   };
@@ -101,21 +75,21 @@ const LoginScreen = () => {
           onChangeText={(text) => setPassword(text)}
           secureTextEntry
         />
-        <TextInput
+        {/* <TextInput
           placeholder="Secret Code (Admin)"
           placeholderTextColor="gray"
           style={styles.textInput}
           value={secretCode}
           onChangeText={(text) => setSecretCode(text)}
-        />
+        /> */}
 
         <TouchableOpacity style={styles.loginBtn} onPress={handleSignIn}>
           <Text style={styles.btnText}>Login</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.registerBtn} onPress={handleSignUp}>
+        {/* <TouchableOpacity style={styles.registerBtn} onPress={handleSignUp}>
           <Text style={styles.btnText}>Register</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View>
   );
@@ -133,20 +107,20 @@ const styles = StyleSheet.create({
     borderColor: "#df8610",
   },
   loginBtn: {
-    backgroundColor: "#df8610", // Background color of the button
-    paddingVertical: 15, // Vertical padding
-    paddingHorizontal: 20, // Horizontal padding
-    borderRadius: 8, // Border radius
-    alignItems: "center", // Center content horizontally
+    backgroundColor: "#df8610",
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    alignItems: "center",
     justifyContent: "center",
     marginTop: "3%",
   },
   registerBtn: {
-    backgroundColor: "#df8610", // Background color of the button
+    backgroundColor: "#df8610",
     paddingVertical: 15,
-    paddingHorizontal: 20, // Horizontal padding
-    borderRadius: 8, // Border radius
-    alignItems: "center", // Center content horizontally
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    alignItems: "center",
     justifyContent: "center",
     marginTop: "5%",
   },

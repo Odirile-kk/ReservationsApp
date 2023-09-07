@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from "react";
 import {
   ImageBackground,
   SafeAreaView,
@@ -11,25 +11,24 @@ import {
   ScrollView,
   Touchable,
   TouchableOpacity,
-} from 'react-native';
+} from "react-native";
 import Icons from "react-native-vector-icons/MaterialCommunityIcons";
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import COLORS from '../const/colors';
+import Icon from "react-native-vector-icons/MaterialIcons";
+import COLORS from "../const/colors";
 import { collection, getDocs, db } from "../firebase";
-const {width} = Dimensions.get('screen');
+const { width } = Dimensions.get("screen");
 
-
-const DetailsScreen = ({navigation, route}) => {
-  const {restuarant} = route.params;
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [address, setAddress] = useState('');
+const DetailsScreen = ({ navigation, route }) => {
+  const { restuarant } = route.params;
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [address, setAddress] = useState("");
   const [images, setImages] = useState([]);
   const [image1, setImage1] = useState([]);
   const [image2, setImage2] = useState([]);
   const [image3, setImage3] = useState([]);
   const [gallery, setGallery] = useState([]);
-  const {userEmail, userUID } = route.params;
+  const { userEmail, userUID } = route.params;
   const [restuarants, setRestuarants] = useState([]);
 
   useEffect(() => {
@@ -46,34 +45,36 @@ const DetailsScreen = ({navigation, route}) => {
         });
         setRestuarants(data);
         // Find the specific restaurant's data by its ID
-        const specificRestaurant = data.find(r => r.id === restuarant.id);
+        const specificRestaurant = data.find((r) => r.id === restuarant.id);
 
         // Prepopulate the form fields with the specific restaurant's data
         if (specificRestaurant) {
           setName(specificRestaurant.name);
           setDescription(specificRestaurant.description);
           setAddress(specificRestaurant.address);
-          setImages(specificRestaurant.images)
+          setImages(specificRestaurant.images);
           setImage1(specificRestaurant.image1);
-          setImage2(specificRestaurant.imgae2)
-          setImage3(specificRestaurant.image3)
+          setImage2(specificRestaurant.imgae2);
+          setImage3(specificRestaurant.image3);
         }
-        console.log(specificRestaurant)
-      
+        console.log(specificRestaurant);
       } catch (error) {
         console.error("Error fetching data: ", error);
       }
     };
     getData();
   }, []);
-console.log(restuarant.image1)
+
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: COLORS.light}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.light }}>
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* restuarant image */}
 
         <View style={style.backgroundImageContainer}>
-          <ImageBackground style={style.backgroundImage}  source={{ uri: images }}>
+          <ImageBackground
+            style={style.backgroundImage}
+            source={{ uri: images }}
+          >
             <View style={style.header}>
               <View style={style.headerBtn}>
                 <Icon
@@ -88,41 +89,43 @@ console.log(restuarant.image1)
 
         <View style={style.detailsContainer}>
           {/* Name and rating view container */}
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text style={{fontSize: 20, fontWeight: 'bold'}}>
-            {name}
-            </Text>
-            
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            <Text style={{ fontSize: 20, fontWeight: "bold" }}>{name}</Text>
           </View>
 
           {/* Location text */}
-          <Text style={{fontSize: 16, color: COLORS.grey}}>
-          <Icons name="map-marker" color={COLORS.primary} size={18} />
-          {address}
+          <Text style={{ fontSize: 16, color: COLORS.grey }}>
+            <Icons name="map-marker" color={COLORS.primary} size={18} />
+            {address}
           </Text>
 
-          
-          <Text style={{marginTop: 20, color: COLORS.grey}}>
+          <Text style={{ marginTop: 20, color: COLORS.grey }}>
             {description}
           </Text>
 
-      {/* Additional images */}
-<FlatList 
-data={[image1, image2, image3]}
-numColumns={3}
-keyExtractor={(item) => item.id}
-renderItem={({item}) => (
-  <View>
-    <Image source={{data}} style={{width: 60, height: 60}}/>
-  </View>
-)}
-/>
-      
-            <TouchableOpacity style={style.bookNowBtn} onPress={() => navigation.navigate('Reserve', {userEmail, restuarant, userUID } )}>
-              <Text style={{color: COLORS.white}}>Reserve Now</Text>
-            </TouchableOpacity>
-          </View>
-   
+          {/* Additional images */}
+          {/* <FlatList
+            data={[image1, image2, image3]}
+            numColumns={3}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <View>
+                <Image source={{ data }} style={{ width: 60, height: 60 }} />
+              </View>
+            )}
+          /> */}
+
+          <TouchableOpacity
+            style={style.bookNowBtn}
+            onPress={() =>
+              navigation.navigate("Reserve", { userEmail, restuarant, userUID })
+            }
+          >
+            <Text style={{ color: COLORS.white }}>Reserve Now</Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -133,19 +136,19 @@ const style = StyleSheet.create({
     elevation: 20,
     marginHorizontal: 20,
     marginTop: 20,
-    alignItems: 'center',
+    alignItems: "center",
     height: 350,
   },
   backgroundImage: {
-    height: '100%',
-    width: '100%',
+    height: "100%",
+    width: "100%",
     borderRadius: 20,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   header: {
     paddingVertical: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     paddingHorizontal: 10,
   },
   headerBtn: {
@@ -153,16 +156,16 @@ const style = StyleSheet.create({
     width: 50,
     backgroundColor: COLORS.white,
     borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   ratingTag: {
     height: 30,
     width: 35,
     backgroundColor: COLORS.blue,
     borderRadius: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   virtualTag: {
     top: -20,
@@ -171,8 +174,8 @@ const style = StyleSheet.create({
     height: 40,
     paddingHorizontal: 20,
     backgroundColor: COLORS.dark,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   interiorImage: {
     width: width / 3 - 20,
@@ -185,29 +188,23 @@ const style = StyleSheet.create({
     backgroundColor: COLORS.light,
     borderRadius: 10,
     paddingHorizontal: 20,
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginVertical: 10,
   },
   bookNowBtn: {
     height: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: COLORS.primary,
     borderRadius: 10,
     paddingHorizontal: 20,
-    marginTop: 10
+    marginTop: 10,
   },
-  detailsContainer: {flex: 1, paddingHorizontal: 20, marginTop: 40},
-  facility: {flexDirection: 'row', marginRight: 15},
-  facilityText: {marginLeft: 5, color: COLORS.grey},
+  detailsContainer: { flex: 1, paddingHorizontal: 20, marginTop: 40 },
+  facility: { flexDirection: "row", marginRight: 15 },
+  facilityText: { marginLeft: 5, color: COLORS.grey },
 });
 
 export default DetailsScreen;
-
-
-
-
-
-
