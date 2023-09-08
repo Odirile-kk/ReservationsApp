@@ -8,16 +8,13 @@ const WelcomeScreen = ({navigation}) => {
     // const navigate = useNavigation()
     useEffect(() => {
       setTimeout(() => {
-        navigation.navigate('login');
-      }, 4000); // Navigates to 'Login' after 3 seconds (3000 milliseconds)
+        navigation.navigate('signup');
+      }, 4000); 
     }, []);
 
   return (
     <View style={{backgroundColor: '#df8610', width: '100%', height: '100%'}}>
      <Image source={require('../assets/logo-bigbite.png')} style={{width: '70%', height: '60%', display: 'flex', justifyContent: 'center', alignSelf: 'center', marginTop: '35%'}}></Image>
-    {/* <TouchableOpacity>
-        <Text onPress={()=>navigate.navigate('login')} style={styles.loginBtn}>LOGIN</Text>
-    </TouchableOpacity> */}
     </View>
   )
 }

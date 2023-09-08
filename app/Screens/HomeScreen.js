@@ -59,7 +59,8 @@ const HomeScreen = ({ navigation, route }) => {
 
   const cardItem = ({ item }) => {
     return (
-      <TouchableOpacity
+       <View>
+ <TouchableOpacity
         activeOpacity={0.8}
         onPress={() => navigation.navigate("DetailsScreen", { restuarant: item, userEmail, userUID } )}
       >
@@ -79,7 +80,6 @@ const HomeScreen = ({ navigation, route }) => {
   
           {/* Render all the card details here */}
           <View style={style.cardDetailsContainer}>
-            {/* Name and gender icon */}
             <View
               style={{ flexDirection: "row", justifyContent: "space-between" }}
             >
@@ -105,11 +105,14 @@ const HomeScreen = ({ navigation, route }) => {
           </View>
         </View>
       </TouchableOpacity>
+       </View>
+     
     );
   };
 
   return (
-    <View style={style.mainContainer}>
+    <ScrollView>
+ <View style={style.mainContainer}>
       <TouchableOpacity style={{ display: "flex", flexDirection: "row", padding: "3%" }} onPress={() => navigation.navigate('UserProfile', {userEmail, userUID, isAdmin})}>
         <Icon name="account" size={30} color={COLORS.primary}/>
       </TouchableOpacity>
@@ -126,15 +129,17 @@ const HomeScreen = ({ navigation, route }) => {
         <Icon name="sort-ascending" size={24} color={COLORS.grey} />
       </View>
       {/* Render the cards with flatlist */}
-      <View style={{ marginTop: 20 }}>
+     
         <FlatList
           showsVerticalScrollIndicator={false}
           data={filteredRestaurants}
           renderItem={cardItem}
         keyExtractor={(item) => item.id}
         />
-      </View>
+    
     </View>
+    </ScrollView>
+   
   );
 };
 
