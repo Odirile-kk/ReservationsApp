@@ -8,9 +8,16 @@ import {
   ScrollView,
   StyleSheet,
 } from 'react-native';
-import ImagePicker from 'react-native-image-picker';
-import { collection, doc, setDoc, updateDoc, getDocs} from "firebase/firestore"; 
+import * as ImagePicker from "expo-image-picker";
+import { collection, doc, setDoc, updateDoc, getDocs,} from "firebase/firestore"; 
 import { db } from '../firebase';
+import {
+  ref,
+  uploadString,
+  uploadBytes,
+  getDownloadURL,
+  getStorage,
+} from "firebase/storage";
 
 
 const UpdateRestuarant = ({ route }) => {
@@ -18,8 +25,10 @@ const UpdateRestuarant = ({ route }) => {
   const [description, setDescription] = useState('');
   const [address, setAddress] = useState('');
   const [images, setImages] = useState([]);
+ 
   const [restuarants, setRestuarants] = useState([]);
   const {restuarant} = route.params;
+  const storage = getStorage();
 
   useEffect(() => {
     const getData = async () => {
@@ -51,18 +60,47 @@ const UpdateRestuarant = ({ route }) => {
   }, []);
 
 
-  const handleImageUpload = () => {
-    ImagePicker.launchImageLibrary(
-      {
-        mediaType: 'photo',
-        selectionLimit: 5 - images.length,
-      },
-      response => {
-        if (!response.didCancel && !response.error) {
-          setImages(prevImages => [...prevImages, response.uri]);
-        }
+  const handleImageUpload = async () => {
+    // Check for permissions to access the device's image library
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    
+    if (status !== 'granted') {
+      alert('Permission to access the image library is required!');
+      return;
+    }
+  
+    // Launch the image picker
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+  
+    if (!result.canceled) {
+      const imageUri = result.uri;
+  
+      const storageRef = ref(storage, `images/${Date.now()}`);
+  
+      try {
+       // Convert the image file to a Blob
+      const response = await fetch(imageUri);
+      const blob = await response.blob();
+
+      // Upload the Blob to Firebase Storage
+      await uploadBytes(storageRef, blob);
+
+      // Get the download URL for the uploaded image
+      const downloadURL = await getDownloadURL(storageRef);
+
+      // Set the download URL in your component state or do whatever you need with it
+      setImages(downloadURL);
+     
+      } catch (error) {
+        console.error('Error uploading image: ', error);
+      
       }
-    );
+    }
   };
 
   const handleSubmit = async () => {
@@ -72,7 +110,8 @@ const UpdateRestuarant = ({ route }) => {
   await updateDoc(newCityRef, {
       name : name ,
       description : description,
-      address : address
+      address : address,
+      images: images,
   })
   .then(() => {
     alert("Restaurant Updated Successfully")
@@ -112,14 +151,15 @@ const UpdateRestuarant = ({ route }) => {
 
       <Text style={styles.label}>Images:</Text>
       <View style={styles.imageContainer}>
-        {images.map(imageUri => (
-          <Image key={imageUri} source={{ uri: imageUri }} style={styles.uploadedImage} />
-        ))}
-        {images.length < 5 && (
-          <TouchableOpacity style={styles.uploadButton} onPress={handleImageUpload}>
-            <Text style={styles.uploadButtonText}>Upload Image</Text>
-          </TouchableOpacity>
+        {images && (
+          <Image source={{ uri: images }} style={styles.uploadedImage} />
         )}
+        <TouchableOpacity
+          style={styles.uploadButton}
+          onPress={handleImageUpload}
+        >
+          <Text style={styles.uploadButtonText}>Upload Image</Text>
+        </TouchableOpacity>
       </View>
 
       <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>

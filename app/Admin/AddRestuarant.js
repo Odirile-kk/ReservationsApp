@@ -15,6 +15,7 @@ import * as ImagePicker from "expo-image-picker";
 import {
   ref,
   uploadString,
+  uploadBytes,
   getDownloadURL,
   getStorage,
 } from "firebase/storage";
@@ -28,29 +29,48 @@ const AddRestuarant = () => {
   const storage = getStorage();
 
   const handleImageUpload = async () => {
-    // No permissions request is necessary for launching the image library
+    // Check for permissions to access the device's image library
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    
+    if (status !== 'granted') {
+      alert('Permission to access the image library is required!');
+      return;
+    }
+  
+    // Launch the image picker
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
+       multiple: true,
     });
-
+  
     if (!result.canceled) {
-      // setImages(result.assets[0].uri);
-
       const imageUri = result.uri;
-
+  
+      // Create a reference to Firebase Storage
       const storageRef = ref(storage, `images/${Date.now()}`);
+  
+      try {
+       // Convert the image file to a Blob
+      const response = await fetch(imageUri);
+      const blob = await response.blob();
 
-      await uploadString(storageRef, imageUri, "data_url");
+      // Upload the Blob to Firebase Storage
+      await uploadBytes(storageRef, blob);
 
+      // Get the download URL for the uploaded image
       const downloadURL = await getDownloadURL(storageRef);
 
-      setImages(downloadURL); 
+      // Set the download URL in your component state or do whatever you need with it
+      setImages(downloadURL);
+      } catch (error) {
+        console.error('Error uploading image: ', error);
+      }
     }
-    console.log(images);
   };
+  
 
   const handleSubmit = async () => {
     // Add a new document with a generated id

@@ -30,7 +30,7 @@ const LoginScreen = () => {
       .then(async (userCredentials) => {
         const user = userCredentials.user;
 
-        // Assuming you have a Firestore collection named 'users'
+      
         const usersCollection = collection(db, "users");
 
         // Create a document for the user using their UID as the document ID

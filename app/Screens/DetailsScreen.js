@@ -105,17 +105,9 @@ const DetailsScreen = ({ navigation, route }) => {
             {description}
           </Text>
 
-          {/* Additional images */}
-          {/* <FlatList
-            data={[image1, image2, image3]}
-            numColumns={3}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <View>
-                <Image source={{ data }} style={{ width: 60, height: 60 }} />
-              </View>
-            )}
-          /> */}
+          <View style={{ margin: 10 }}>
+      <Image source={{uri : image1}} style={{ width: 60, height: 60 }} />
+    </View>
 
           <TouchableOpacity
             style={style.bookNowBtn}
