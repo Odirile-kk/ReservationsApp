@@ -69,7 +69,6 @@ const UpdateRestuarant = ({ route }) => {
       return;
     }
   
-    // Launch the image picker
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,

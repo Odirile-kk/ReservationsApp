@@ -37,7 +37,6 @@ const AddRestuarant = () => {
       return;
     }
   
-    // Launch the image picker
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -56,14 +55,9 @@ const AddRestuarant = () => {
        // Convert the image file to a Blob
       const response = await fetch(imageUri);
       const blob = await response.blob();
-
-      // Upload the Blob to Firebase Storage
       await uploadBytes(storageRef, blob);
-
       // Get the download URL for the uploaded image
       const downloadURL = await getDownloadURL(storageRef);
-
-      // Set the download URL in your component state or do whatever you need with it
       setImages(downloadURL);
       } catch (error) {
         console.error('Error uploading image: ', error);
@@ -71,7 +65,6 @@ const AddRestuarant = () => {
     }
   };
   
-
   const handleSubmit = async () => {
     // Add a new document with a generated id
     const newCityRef = doc(collection(db, "restuarants"));

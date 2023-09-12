@@ -18,7 +18,7 @@ import UserProfile from "./Screens/UserProfile";
 import Reserve from "./Screens/Reserve";
 import UserReservations from "./Screens/UserReservations";
 import UserReserv from './Screens/UserReserv';
-import UpdateUser from "./Screens/UpdateUser";
+import EditProfile from "./Screens/EditProfile";
 
 export default function Page() {
 
@@ -26,7 +26,7 @@ export default function Page() {
 
   return (
     <Stack.Navigator >
-    <Stack.Screen options={{ headerShown: false}} name="welcome" component={WelcomeScreen}/> 
+    {/* <Stack.Screen options={{ headerShown: false}} name="welcome" component={WelcomeScreen}/>  */}
     <Stack.Screen options={{ headerShown: false}} name="signup" component={Signup}/>
     <Stack.Screen options={{ headerShown: false}} name="login" component={LoginScreen}/>
     
@@ -37,7 +37,7 @@ export default function Page() {
         <Stack.Screen  name="Reserve" component={Reserve} />
         <Stack.Screen options={{ headerShown: false}} name="UserReservations" component={UserReservations} />
         <Stack.Screen options={{ headerShown: false }} name="UserReserv" component={UserReserv} />
-        <Stack.Screen name="UpdateUser" component={UpdateUser} />
+        <Stack.Screen name="EditProfile" component={EditProfile} />
 
         {/*Admin panel */}
         <Stack.Screen name="Home" component={Home} /> 

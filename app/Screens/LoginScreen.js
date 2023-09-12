@@ -6,12 +6,12 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigation } from "expo-router";
 import COLORS from "../const/colors";
 import { authorisation } from "../firebase";
 import {
-  createUserWithEmailAndPassword,
+  onAuthStateChanged,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { collection, doc, setDoc, getDocs } from "firebase/firestore";
@@ -36,10 +36,11 @@ const LoginScreen = () => {
 
           if (doc.data().uid === user.uid) {
             isAdmin = doc.data().isAdmin;
+    
           }
         });
 
-        console.log("isAdmin:", isAdmin);
+        console.log("isAdmin:", user.id);
 
         nav.replace("HomeScreen", {
           userEmail: user.email,

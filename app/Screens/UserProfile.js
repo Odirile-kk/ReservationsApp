@@ -15,11 +15,9 @@ import {
 import { db } from "../firebase";
 
 const UserProfile = ({ route }) => {
-
   const { userEmail, userUID, isAdmin } = route.params;
   const navigate = useNavigation();
-  const [user, setUserData] = useState('');
-
+  const [user, setUserData] = useState("");
 
   useEffect(() => {
     const getData = async () => {
@@ -44,71 +42,100 @@ const UserProfile = ({ route }) => {
     console.log("Data:", user);
   }, []);
 
-
-  const cardProfile = ({item}) => {
-
-
+  const cardProfile = ({ item }) => {
     return (
-      <View >
-        <Text style={{fontSize: 30}}>Hello, {item.name} {item.surname}</Text>
+      <View
+        style={{
+          elevation: 20,
+          // marginHorizontal: 20,
+          // marginTop: '-30%',
+          alignItems: "center",
+          height: 350,
+          // backgroundColor: 'pink'
+        }}
+      >
+        <Image
+          source={{uri : item.image}}
+          style={{
+            height: "80%",
+            width: "70%",
+            borderRadius: '50%',
+           backgroundColor: 'pink'
+          }}
+        />
+        <Text style={{ fontSize: 30, marginTop: 10 }}>
+          {item.name} {item.surname}
+        </Text>
+        <TouchableOpacity
+        onPress={() => navigate.navigate('EditProfile', {userUID})}
+          style={{
+            marginTop: "40%",
+            backgroundColor: COLORS.secondary,
+            padding: 10,
+            borderRadius: 25,
+            borderColor: COLORS.primary,
+            borderWidth: 2,
+          }}
+        >
+          <Text>Edit profile</Text>
+        </TouchableOpacity>
       </View>
-    )
-  }
+    );
+  };
 
   return (
     <View style={styles.container}>
-
-    
-    <View
-      style={{
-        alignItems: "center",
-        justifyContent: "space-around",
-        // flexDirection: "row",
-        marginTop: "2%",
-      }}
-    >
-    <FlatList 
-      data={user}
-      renderItem={cardProfile}
-      style={{
-        top: '-110%'
-      }}
-    />
-      {!isAdmin && ( 
-        <TouchableOpacity
-          style={{
-            backgroundColor: COLORS.primary,
-            padding: 15, 
-            borderRadius: 25, 
-            borderColor: COLORS.secondary, 
-            borderWidth: 2, 
-          }}
-          onPress={() => navigate.navigate("UserReservations", { userUID })}
-        >
-          <Text>View Your Reservations</Text>
-        </TouchableOpacity>
-      )}
-  
-      <TouchableOpacity
-        onPress={() => {
-          if (isAdmin) {
-            navigate.navigate("Home");
-          }
-        }}
+      <View
         style={{
-          backgroundColor: COLORS.secondary,
-          padding: 15,
-          borderRadius: 25,
-          borderColor: COLORS.primary,
-          borderWidth: 2,
-          display: isAdmin ? "flex" : "none", // Show the button only if isAdmin is true
+          alignItems: "center",
+          justifyContent: "space-around",
+          // flexDirection: "row",
+          marginTop: "2%",
         }}
       >
-        <Text>{isAdmin ? "Admin Dashboard" : "View Dash Board"}</Text>
-      </TouchableOpacity>
+        <FlatList
+          data={user}
+          renderItem={cardProfile}
+          showsVerticalScrollIndicator={false}
+          style={{
+            width: "200%",
+            height: 400,
+          }}
+        />
+        {!isAdmin && (
+          <TouchableOpacity
+            style={{
+              backgroundColor: COLORS.primary,
+              padding: 15,
+              borderRadius: 25,
+              borderColor: COLORS.secondary,
+              borderWidth: 2,
+            }}
+            onPress={() => navigate.navigate("UserReservations", { userUID })}
+          >
+            <Text>View Your Reservations</Text>
+          </TouchableOpacity>
+        )}
 
+        <TouchableOpacity
+          onPress={() => {
+            if (isAdmin) {
+              navigate.navigate("Home");
+            }
+          }}
+          style={{
+            backgroundColor: COLORS.secondary,
+            padding: 15,
+            borderRadius: 25,
+            borderColor: COLORS.primary,
+            borderWidth: 2,
+            display: isAdmin ? "flex" : "none", // Show the button only if isAdmin is true
+          }}
+        >
+          <Text>{isAdmin ? "Admin Dashboard" : "View Dash Board"}</Text>
+        </TouchableOpacity>
+      </View>
     </View>
-  </View>
   );
 };
 
@@ -118,7 +145,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
-    backgroundColor: COLORS.primary
+    backgroundColor: COLORS.primary,
   },
   label: {
     fontSize: 16,
