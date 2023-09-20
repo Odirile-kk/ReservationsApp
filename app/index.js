@@ -19,6 +19,7 @@ import Reserve from "./Screens/Reserve";
 import UserReservations from "./Screens/UserReservations";
 import UserReserv from './Screens/UserReserv';
 import EditProfile from "./Screens/EditProfile";
+import EditReservation from "./Screens/EditReservation";
 
 export default function Page() {
 
@@ -38,6 +39,7 @@ export default function Page() {
         <Stack.Screen options={{ headerShown: false}} name="UserReservations" component={UserReservations} />
         <Stack.Screen options={{ headerShown: false }} name="UserReserv" component={UserReserv} />
         <Stack.Screen name="EditProfile" component={EditProfile} />
+        <Stack.Screen options={{ headerShown: false}} name="EditReservation" component={EditReservation} />
 
         {/*Admin panel */}
         <Stack.Screen name="Home" component={Home} /> 

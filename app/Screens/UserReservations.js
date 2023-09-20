@@ -65,12 +65,7 @@ const UserReservations = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.headerBtn}>
-          <Icon name="arrow-back-ios" size={20} onPress={navigation.goBack} />
-        </View>
-      </View>
-
+     
       <FlatList
         data={restuarants}
         renderItem={renderItem}

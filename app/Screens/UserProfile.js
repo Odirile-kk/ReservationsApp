@@ -39,7 +39,7 @@ const UserProfile = ({ route }) => {
       }
     };
     getData();
-    console.log("Data:", user);
+    // console.log("Data:", user);
   }, []);
 
   const cardProfile = ({ item }) => {
@@ -57,7 +57,7 @@ const UserProfile = ({ route }) => {
         <Image
           source={{uri : item.image}}
           style={{
-            height: "80%",
+            height: "50%",
             width: "70%",
             borderRadius: '50%',
            backgroundColor: 'pink'

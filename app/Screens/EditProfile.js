@@ -27,13 +27,14 @@ import {
   getDownloadURL,
   getStorage,
 } from "firebase/storage";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const EditProfile = ({ route }) => {
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [image, setImage] = useState("");
   const [userId, setUserId] = useState("");
-  const { userUID } = route.params;
+  const { userUID, isAdmin } = route.params;
   const [user, setUserData] = useState("");
   const storage = getStorage();
   const nav = useNavigation();
@@ -67,7 +68,7 @@ const EditProfile = ({ route }) => {
     console.log("Data:", user);
   }, [userUID]);
 
-  console.log(user);
+  // console.log(user);
 
   const handleImageUpload = async () => {
     // Check for permissions to access the device's image library
@@ -115,16 +116,19 @@ const EditProfile = ({ route }) => {
       nav("UserProfile");
     } catch (error) {
       console.error("Error updating user: ", error);
-      alert("Error updating user profile");
+      // alert("Error updating user profile");
     }
   };
 
   return (
     <View style={styles.container}>
+    <Image source={{ uri: image }} style={styles.image} />
       <TouchableOpacity onPress={handleImageUpload}>
-        <Image source={{ uri: image }} style={styles.image} />
-
-        <Text>Select Profile Image</Text>
+      <MaterialCommunityIcons 
+      name="camera" size={24} 
+      color="white" 
+        style={{top: '-300%'}}
+      />
       </TouchableOpacity>
       <TextInput
         style={styles.input}
@@ -139,6 +143,38 @@ const EditProfile = ({ route }) => {
       <TouchableOpacity style={styles.button} onPress={handleSave}>
         <Text style={styles.buttonText}>Save Changes</Text>
       </TouchableOpacity>
+      {!isAdmin && (
+          <TouchableOpacity
+            style={{
+              backgroundColor: COLORS.primary,
+              padding: 15,
+              borderRadius: 25,
+              borderColor: COLORS.secondary,
+              borderWidth: 2,
+            }}
+            onPress={() => nav.navigate("UserReservations", { userUID })}
+          >
+            <Text>View Your Reservations</Text>
+          </TouchableOpacity>
+        )}
+
+        <TouchableOpacity
+          onPress={() => {
+            if (isAdmin) {
+              navigate.navigate("Home");
+            }
+          }}
+          style={{
+            backgroundColor: COLORS.secondary,
+            padding: 15,
+            borderRadius: 25,
+            borderColor: COLORS.primary,
+            borderWidth: 2,
+            display: isAdmin ? "flex" : "none", // Show the button only if isAdmin is true
+          }}
+        >
+          <Text>{isAdmin ? "Admin Dashboard" : "View Dash Board"}</Text>
+        </TouchableOpacity>
     </View>
   );
 };
@@ -152,8 +188,9 @@ const styles = StyleSheet.create({
   image: {
     width: 200,
     height: 200,
-    borderRadius: "50%",
-    marginBottom: 20,
+    borderRadius: "100%",
+    // marginBottom: 70,
+    top: -45
   },
   input: {
     width: "80%",

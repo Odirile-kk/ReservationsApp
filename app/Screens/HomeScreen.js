@@ -20,6 +20,7 @@ import {
   where,
 } from "firebase/firestore";
 
+
 const { height } = Dimensions.get("window");
 
 const HomeScreen = ({ navigation, route }) => {
@@ -160,20 +161,22 @@ const HomeScreen = ({ navigation, route }) => {
         <TouchableOpacity
           style={{ display: "flex", flexDirection: "row", padding: "3%" }}
           onPress={() =>
-            navigation.navigate("UserProfile", { userEmail, userUID, isAdmin })
+            navigation.navigate("EditProfile", { userEmail, userUID, isAdmin })
           }
         >
-          <Text style={{
+         <Text style={{
             fontWeight: 600,
             fontSize: 30
           }}>Hello, {user[0]?.name}</Text>
           <Icon name="account" size={30} color={COLORS.primary} 
             style={{
-              marginLeft: '60%'
-            }}
-          />
+              marginLeft: '40%'
+            }} />
         
         </TouchableOpacity>
+       
+          
+         
 
         {/* Render the search inputs and icons */}
         <View style={style.searchInputContainer}>
@@ -213,11 +216,11 @@ const style = StyleSheet.create({
     // alignItems: 'center',
   },
   mainContainer: {
-    // flex: 1,
+    flex: 1,
     backgroundColor: COLORS.light,
     // borderTopLeftRadius: 40,
     // borderTopRightRadius: 40,
-    // marginTop: 20,
+    marginTop: 20,
     paddingHorizontal: 20,
     // paddingVertical: 40,
     minHeight: height,

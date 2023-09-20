@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   textInput: {
     padding: "3%",
     marginTop: "2%",
-    borderWidth: "1",
+    borderWidth: 1,
     borderRadius: 10,
     paddingVertical: 15,
     borderColor: "#df8610",

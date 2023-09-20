@@ -24,7 +24,7 @@ const UserReserv = ({ route }) => {
 
       try {
         const querySnapshot = await getDocs(query(reservationCollection, where('userId', '==', userUID)));
-        console.log("query:", querySnapshot);
+        // console.log("query:", querySnapshot);
         const reservations = [];
         
         querySnapshot.forEach((doc) => {
@@ -43,6 +43,8 @@ const UserReserv = ({ route }) => {
     };
     getData();
   }, []);
+
+
 
   const handleDelete = async (reservationId) => {
     try {
@@ -79,7 +81,7 @@ const UserReserv = ({ route }) => {
     elevation: 5,
       }}
     >
-      <Image source={{ uri: item.images }} style={styles.image} />
+      <Image source={require('../assets/logo-bigbite.png')} style={styles.image} />
       <View style={styles.detailItem}>
         <Text style={styles.text}>{item.name}</Text>
         <Text style={styles.text}>{item.email}</Text>
@@ -93,6 +95,11 @@ const UserReserv = ({ route }) => {
     alignItems: "flex-end",
         }}
       >
+        <TouchableOpacity style={styles.button} 
+         onPress={() => navigation.navigate('EditReservation', {restuarant, reservationId : item.id})}
+        >
+          <Text style={styles.buttonText}>Edit</Text>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={() => handleDelete(item.id)}>
           <Text style={styles.buttonText}>Cancel</Text>
         </TouchableOpacity>
@@ -140,8 +147,9 @@ const styles = StyleSheet.create({
   image: {
     width: 80,
     height: 80,
-    borderRadius: 25,
+    borderRadius: '100%',
     marginRight: 10,
+    marginTop: 30
   },
   text: {
     flex: 1,
@@ -149,8 +157,9 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: "#3498db",
+    padding: 8,
     paddingVertical: 5,
-    paddingHorizontal: 10,
+    // paddingHorizontal: 15,
     borderRadius: 5,
     marginTop: 5,
   },
