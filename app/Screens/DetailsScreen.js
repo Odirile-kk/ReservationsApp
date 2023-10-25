@@ -16,6 +16,8 @@ import Icons from "react-native-vector-icons/MaterialCommunityIcons";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import COLORS from "../const/colors";
 import { collection, getDocs, db } from "../firebase";
+import { ActivityIndicator } from "react-native";
+
 const { width } = Dimensions.get("screen");
 
 const DetailsScreen = ({ navigation, route }) => {
@@ -30,6 +32,7 @@ const DetailsScreen = ({ navigation, route }) => {
   const [gallery, setGallery] = useState([]);
   const { userEmail, userUID } = route.params;
   const [restuarants, setRestuarants] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const getData = async () => {
@@ -58,8 +61,10 @@ const DetailsScreen = ({ navigation, route }) => {
           setImage3(specificRestaurant.image3);
         }
         console.log(specificRestaurant);
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching data: ", error);
+        setIsLoading(false);
       }
     };
     getData();
@@ -67,58 +72,67 @@ const DetailsScreen = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.light }}>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {/* restuarant image */}
-
-        <View style={style.backgroundImageContainer}>
-          <ImageBackground
-            style={style.backgroundImage}
-            source={{ uri: images }}
-          >
-            <View style={style.header}>
-              <View style={style.headerBtn}>
-                <Icon
-                  name="arrow-back-ios"
-                  size={20}
-                  onPress={navigation.goBack}
-                />
+      {isLoading ? (
+        <ActivityIndicator size="large" color={COLORS.primary} />
+      ) : (
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <View style={style.backgroundImageContainer}>
+            <ImageBackground
+              style={style.backgroundImage}
+              source={{ uri: images }}
+            >
+              <View style={style.header}>
+                <View style={style.headerBtn}>
+                  <Icon
+                    name="arrow-back-ios"
+                    size={20}
+                    onPress={navigation.goBack}
+                  />
+                </View>
               </View>
-            </View>
-          </ImageBackground>
-        </View>
-
-        <View style={style.detailsContainer}>
-          {/* Name and rating view container */}
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
-          >
-            <Text style={{ fontSize: 20, fontWeight: "bold" }}>{name}</Text>
+            </ImageBackground>
           </View>
 
-          {/* Location text */}
-          <Text style={{ fontSize: 16, color: COLORS.grey }}>
-            <Icons name="map-marker" color={COLORS.primary} size={18} />
-            {address}
-          </Text>
+          <View style={style.detailsContainer}>
+            {/* Name and rating view container */}
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <Text style={{ fontSize: 20, fontWeight: "bold" }}>{name}</Text>
+            </View>
 
-          <Text style={{ marginTop: 20, color: COLORS.grey }}>
-            {description}
-          </Text>
+            {/* Location text */}
+            <Text style={{ fontSize: 16, color: COLORS.grey }}>
+              <Icons name="map-marker" color={COLORS.primary} size={18} />
+              {address}
+            </Text>
 
-          <View style={{ margin: 10 }}>
-      <Image source={{uri : image1}} style={{ width: 60, height: 60 }} />
-    </View>
+            <Text style={{ marginTop: 20, color: COLORS.grey }}>
+              {description}
+            </Text>
 
-          <TouchableOpacity
-            style={style.bookNowBtn}
-            onPress={() =>
-              navigation.navigate("Reserve", { userEmail, restuarant, userUID })
-            }
-          >
-            <Text style={{ color: COLORS.white }}>Reserve Now</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+            <View style={{ margin: 10 }}>
+              <Image
+                source={{ uri: image1 }}
+                style={{ width: 60, height: 60 }}
+              />
+            </View>
+
+            <TouchableOpacity
+              style={style.bookNowBtn}
+              onPress={() =>
+                navigation.navigate("Reserve", {
+                  userEmail,
+                  restuarant,
+                  userUID,
+                })
+              }
+            >
+              <Text style={{ color: COLORS.white }}>Reserve Now</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };
@@ -200,3 +214,4 @@ const style = StyleSheet.create({
 });
 
 export default DetailsScreen;
+
