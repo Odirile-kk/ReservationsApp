@@ -6,16 +6,17 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
+  Alert
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { doc, getDocs, db, collection } from "../firebase";
-import { collectionGroup, deleteDoc } from "firebase/firestore";
+import { collectionGroup, deleteDoc, updateDoc } from "firebase/firestore";
 import { Entypo } from '@expo/vector-icons';
 
 const Reservations = ({ route }) => {
   const navigation = useNavigation();
   const [reservationsData, setReservationsData] = useState([]);
-  const [isArrived, setIsArrived] = useState(false);
+  const [isArrived, setIsArrived] = useState({});
   const { restuarant } = route.params;
 
   useEffect(() => {
@@ -62,6 +63,35 @@ const Reservations = ({ route }) => {
     }
   };
   
+ 
+ 
+
+  const handleConfirm = (reservationId) => {
+    Alert.alert(
+      'Confirmation',
+      'Has the guest arrived at the restaurant?',
+      [
+        {
+          text: 'No',
+          style: 'cancel',
+        },
+        {
+          text: 'Yes',
+          onPress: () => handleIsArrived(reservationId),
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
+
+  const handleIsArrived = (reservationId) => {
+    setIsArrived((prevConfirmed) => ({
+      ...prevConfirmed,
+      [reservationId]: !prevConfirmed[reservationId],
+    }));
+  }
+
 
   const renderItem = ({ item }) => (
     <View
@@ -87,6 +117,7 @@ const Reservations = ({ route }) => {
         <Text style={styles.text}>{item.date}</Text>
         <Text>Time: {item.time}</Text>
         <Text>Guests: {item.guests}</Text>
+        <Text style={{color: 'gray', fontSize: '10', fontStyle: 'italic', marginTop: '8%'}}>{item.timestamp ? item.timestamp.toDate().toLocaleString() : 'N/A'}</Text>
       </View>
       <View
    
@@ -95,6 +126,9 @@ const Reservations = ({ route }) => {
           alignItems: "flex-end",
         }}
       >
+
+
+
         <TouchableOpacity style={styles.button}
            onPress={() => navigation.navigate('UpdateReservation', {restuarant, reservationId : item.id})}
         >
@@ -106,15 +140,19 @@ const Reservations = ({ route }) => {
         >
           <Text style={styles.buttonText}>Delete</Text>
         </TouchableOpacity>
+        
+
+
         <TouchableOpacity
-          style={[styles.button, isArrived ? styles.arrivedButton : null]}
-          onPress={() => setIsArrived(!isArrived)}
+          style={isArrived[item.id] ? styles.confirmedButton : styles.button}
+          onPress={() => handleConfirm(item.id)}
+          disabled={isArrived[item.id]}
         >
           <Text style={styles.buttonText}>
-            {" "}
-            {isArrived ? "Confirmed" : "Pending"}
+            {isArrived[item.id] ? 'Confirmed' : 'Confirm'}
           </Text>
         </TouchableOpacity>
+     
       </View>
     </View>
   );
@@ -195,9 +233,16 @@ const styles = StyleSheet.create({
     // borderRadius: '50%',
     // marginBottom: 10,
   },
-  arrivedButton: {
-    backgroundColor: "gray",
+  confirmedButton: {
+    backgroundColor: 'green', // Change the color when confirmed
+    // Your existing button styles
   },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+ 
 });
 
 export default Reservations;
+
