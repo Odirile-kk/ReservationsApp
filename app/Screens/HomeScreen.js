@@ -19,6 +19,8 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import { ActivityIndicator } from "react-native";
+
 
 
 const { height } = Dimensions.get("window");
@@ -29,6 +31,7 @@ const HomeScreen = ({ navigation, route }) => {
   const [filteredRestaurants, setFilteredRestaurants] = useState([]);
   const { userEmail, userUID, isAdmin } = route.params;
   const [user, setUserData] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const getData = async () => {
@@ -49,6 +52,7 @@ const HomeScreen = ({ navigation, route }) => {
       }
     };
     getData();
+  
     console.log(isAdmin);
   }, []);
 
@@ -66,12 +70,13 @@ const HomeScreen = ({ navigation, route }) => {
           });
         });
         setUserData(data);
-        // console.log("Data:", data);
+        setIsLoading(false)
       } catch (error) {
         console.error("Error fetching data: ", error);
       }
     };
     getData();
+    
     console.log("Data :", user);
   }, []);
 
@@ -157,7 +162,10 @@ const HomeScreen = ({ navigation, route }) => {
 
   return (
     <ScrollView>
+      
       <View style={style.mainContainer}>
+
+
         <TouchableOpacity
           style={{ display: "flex", flexDirection: "row", padding: "3%" }}
           onPress={() =>
@@ -174,9 +182,6 @@ const HomeScreen = ({ navigation, route }) => {
             }} />
         
         </TouchableOpacity>
-       
-          
-         
 
         {/* Render the search inputs and icons */}
         <View style={style.searchInputContainer}>
@@ -190,7 +195,9 @@ const HomeScreen = ({ navigation, route }) => {
           <Icon name="sort-ascending" size={24} color={COLORS.grey} />
         </View>
         {/* Render the cards with flatlist */}
-
+        {isLoading ? (
+        <ActivityIndicator size="large" color={COLORS.primary} />
+      ) : (
         <FlatList
           showsVerticalScrollIndicator={false}
           data={filteredRestaurants}
@@ -203,7 +210,9 @@ const HomeScreen = ({ navigation, route }) => {
             
           }}
         />
+        )}
       </View>
+      
     </ScrollView>
   );
 };
@@ -269,3 +278,4 @@ const style = StyleSheet.create({
   },
 });
 export default HomeScreen;
+
