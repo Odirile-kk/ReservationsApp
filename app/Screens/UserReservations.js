@@ -10,11 +10,14 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { collection, doc, getDocs, db, deleteDoc } from "../firebase";
+import { ActivityIndicator } from "react-native";
+
 
 const UserReservations = ({ route }) => {
   const [restuarants, setRestuarants] = useState([]);
   const navigation = useNavigation();
   const { userUID } = route.params;
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const getData = async () => {
@@ -29,7 +32,7 @@ const UserReservations = ({ route }) => {
           });
         });
         setRestuarants(data);
-        // console.log('outside');
+        setIsLoading(false)
       } catch (error) {
         console.error("Error fetching data: ", error);
       }
@@ -66,6 +69,9 @@ const UserReservations = ({ route }) => {
   return (
     <View style={styles.container}>
      
+     {isLoading ? (
+        <ActivityIndicator size="large" color={COLORS.primary} />
+      ) : (
       <FlatList
         data={restuarants}
         renderItem={renderItem}
@@ -75,6 +81,7 @@ const UserReservations = ({ route }) => {
           width: "100%",
         }}
       />
+      )}
     </View>
   );
 };
@@ -123,3 +130,4 @@ const styles = StyleSheet.create({
 });
 
 export default UserReservations;
+
