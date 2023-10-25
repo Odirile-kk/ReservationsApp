@@ -184,9 +184,3 @@ const styles = StyleSheet.create({
 
 export default App;
 
-
-{/* <View style={styles.header}>
-        <View style={styles.headerBtn}>
-          <Icon name="arrow-back-ios" size={20} onPress={navigation.goBack} />
-        </View>
-      </View> */}
