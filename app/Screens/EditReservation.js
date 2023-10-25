@@ -11,6 +11,8 @@ import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { doc, getDocs, db, collection, updateDoc } from "../firebase";
 import COLORS from '../const/colors';
+import { ActivityIndicator } from "react-native";
+
 
 const EditReservation = ({route}) => {
   const [date, setDate] = useState(new Date());
@@ -23,6 +25,7 @@ const EditReservation = ({route}) => {
   const [reservationsData, setReservationsData] = useState([]);
   const {restuarant, reservationId} = route.params
   const [showPickerOptions, setShowPickerOptions] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleDateChange = (event, selectedDate) => {
     setShowDatePicker(false);
@@ -80,6 +83,7 @@ const EditReservation = ({route}) => {
           setReservationsData(matchingReservation);
           // You can use 'matchingReservation' here outside of the function
         }
+        setIsLoading(false)
       } catch (error) {
         console.error("Error fetching reservations:", error);
       }
@@ -116,7 +120,12 @@ const EditReservation = ({route}) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View>
+       {isLoading ? (
+        <ActivityIndicator size="large" color={COLORS.primary} />
+      ) : (
+      <View style={styles.container}>
+
       <Text style={styles.heading}>Update Reservation</Text>
       {/* <TextInput 
         style={styles.input}
@@ -185,7 +194,12 @@ const EditReservation = ({route}) => {
       >
         <Text style={styles.buttonText}>Update Reservation</Text>
       </TouchableOpacity>
+
+      
     </View>
+      )}
+    </View>
+    
   );
 };
 
@@ -234,3 +248,4 @@ const styles = StyleSheet.create({
 });
 
 export default EditReservation;
+
