@@ -65,6 +65,7 @@ const UserProfile = ({ route }) => {
             backgroundColor: "pink",
           }}
         />
+          
         <Text style={{ fontSize: 30, marginTop: 10 }}>
           {item.name} {item.surname}
         </Text>
