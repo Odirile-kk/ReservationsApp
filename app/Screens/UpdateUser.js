@@ -1,12 +1,15 @@
 import { StyleSheet, Text, View, TextInput, TouchableOpacity } from "react-native";
 import React, {useState, useEffect} from "react";
 import COLORS from "../const/colors";
+import { ActivityIndicator } from "react-native";
+
 
 const UpdateUser = ({route}) => {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [image, setImage] = useState(null);
     const {userEmail} =route.params
+    const [isLoading, setIsLoading] = useState(true);
 
     const handleUsernameChange = (text) => {
         setUsername(text);
@@ -23,6 +26,10 @@ const UpdateUser = ({route}) => {
   return (
     <View>
       <View style={styles.container}>
+
+      {isLoading ? (
+        <ActivityIndicator size="large" color={COLORS.primary} />
+      ) : (
         <View>
           <Text style={styles.label}>Username:</Text>
           <TextInput
@@ -61,6 +68,7 @@ const UpdateUser = ({route}) => {
             
           </View>
         </View>
+      )}
       </View>
     </View>
   );
@@ -69,3 +77,4 @@ const UpdateUser = ({route}) => {
 export default UpdateUser;
 
 const styles = StyleSheet.create({});
+
