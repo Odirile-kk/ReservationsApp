@@ -10,10 +10,12 @@ import {
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker'; 
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { collection, doc, setDoc, addDoc } from "firebase/firestore"; 
+import { collection, doc, serverTimestamp, addDoc } from "firebase/firestore"; 
 import { db } from '../firebase';
 import { useNavigation } from 'expo-router';
 import COLORS from "../const/colors";
+import { ActivityIndicator } from "react-native";
+
 
 const Reserve = ({ route}) => {
   const [date, setDate] = useState(new Date());
@@ -25,6 +27,7 @@ const Reserve = ({ route}) => {
   const [email, setEmail] = useState('')
   const [userId, setUserId] = useState('')
   const {userEmail, userUID, restuarant } = route.params;
+  const [isLoading, setIsLoading] = useState(true);
 
   const navigation = useNavigation()
 
@@ -60,7 +63,8 @@ const Reserve = ({ route}) => {
         time: time.toLocaleTimeString(),
         guests: guests,
         email: userEmail,
-        userId: userUID
+        userId: userUID,
+        timestamp: serverTimestamp(),
       };
     
       try {
@@ -83,7 +87,8 @@ const Reserve = ({ route}) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Table Reservation</Text>
+
+<Text style={styles.heading}>Table Reservation</Text>
       <Image 
         source={require('../assets/eating.png')}
       style={{
@@ -126,7 +131,7 @@ const Reserve = ({ route}) => {
       {showPickerOptions && (
       <Picker
         selectedValue={guests}
-          style={{ width: '100%', height: 40 }}
+          style={{ width: '60%', marginTop: '-10%' }}
           onValueChange={(itemValue, itemIndex) => {
             setGuests(itemValue);
             setShowPickerOptions(false);
@@ -145,7 +150,10 @@ const Reserve = ({ route}) => {
       <TouchableOpacity style={styles.button} onPress={handleReservation}>
         <Text style={styles.buttonText}>Reserve Table</Text>
       </TouchableOpacity>
-    </View>
+     
+</View>
+
+   
   );
 };
 
@@ -195,3 +203,4 @@ const styles = StyleSheet.create({
 });
 
 export default Reserve;
+
